@@ -1,0 +1,138 @@
+﻿
+@{
+    ViewBag.Title = "SearchIndex";
+    Layout = "~/Views/Shared/Registration.cshtml";
+}
+
+<h2>SearchIndex</h2>
+<table class="table">
+    <tr>
+        <th>
+            <label>Search By Doctors Name</label>
+            <input class="form-control" id="drSearch" />
+        </th>
+        <th>
+            <label>Search By Specialist</label>
+            
+            <select name="" id="SpecialityId" class="form-control">
+                <option value="">--Select Specialist--</option>
+                @foreach (var speciality in ViewBag.Specialyty)
+                {
+                    <option value="@speciality.Id">@speciality.SpecialityName</option>
+                }
+            </select>
+
+        </th>
+    </tr>
+    <tr>
+        <th></th>
+        <th>
+            <select name="DoctorId" id="DoctorId">
+                <option value="">--Select--</option>
+            </select>
+        </th>
+    </tr>
+</table>
+<form >
+    <table class="table table-striped table-bordered" id="DoctorTable">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Speciality</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody id="DoctorTableBody"></tbody>
+        <tr>
+            <th>@Html.ActionLink("Schedule", "Patient")</th>
+        </tr>
+
+    </table></form>
+    
+    
+
+    
+@section Scripts{
+    
+<script src="~/Scripts/jquery-1.12.4.min.js"></script>
+    <script src="~/Scripts/jquery-ui-1.12.1.js"></script>
+    <script>
+
+        $(document).ready(function () {
+            $("#DoctorTable").hide();
+            $("#SpecialityId").change(function () {
+                var spId = $("#SpecialityId").val();
+                $("#DoctorId").empty();
+                $("#DoctorId").append('<option value="">--Select--</option>');
+                var json = { specialityId: spId };
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("GetBySpecialityId", "Patient")',
+                    //url: '/Department/GetStudentsByDepartmentId',
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(json),
+                    success: function (data) {
+                        //alert(data);
+                        $.each(data, function (key, value) {
+                            //alert(value.StudentId);
+                            $("#DoctorId").append('<option value=' + value.Id + '>' + value.DoctorName + '</option>');
+                        });
+                    },
+                    error: {
+
+                    },
+                    complete: {
+
+                    }
+                });
+            });
+        });
+        $("#DoctorId").change(function () {
+            var drId = $("#DoctorId").val();
+            $("#DoctorTable").show();
+            $("#DoctorTableBody").empty();
+            var json = { doctorId: drId };
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GetDoctorById", "Patient")',
+                //url: '/Department/GetStudentsByDepartmentId',
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(json),
+                success: function (data) {
+                    //alert(data);
+                    $.each(data, function (key, value) {
+                        //alert(value.StudentId);
+                        $("#DoctorTable").append('<tr><td>' + value.Id + '</td><td>' + value.DoctorName +
+                            '</td><td>' + value.SpecialityName + '</td></tr>');
+    
+                    });
+                },
+                error: {
+
+                },
+                complete: {
+
+                }
+            });
+        });
+
+        $("#drSearch").autocomplete({
+            source:function(request, response) {
+                $.ajax({
+                    url: '@Url.Action("GetDoctor","Patient")',
+                    dataType: "json",
+                    data: { search: $("#drSearch").val() },
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            return { label: item.Name, value: item.Name };
+                        }));
+                    },
+                    error: function (xhr, status, error) {
+                        alert("Error");
+                    }
+                });
+            }
+        });
+    </script>
+}

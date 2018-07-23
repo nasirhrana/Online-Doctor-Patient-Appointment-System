@@ -1,0 +1,207 @@
+﻿@model ODASApp.Models.DrRegistration
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/Registration.cshtml";
+}
+@section styles{
+    
+}
+<h2>Create</h2>
+
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { name = "registrationForm", id = "registrationForm" })) 
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>DrRegistration</h4>
+        <hr />
+        @Html.ValidationSummary(true)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Image, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Image)
+                @Html.ValidationMessageFor(model => model.Image,null,new{@class="MyClass"})
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Name, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Name)
+                @Html.ValidationMessageFor(model => model.Name)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Email, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Email)
+                @Html.ValidationMessageFor(model => model.Email)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.PhoneNo, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.PhoneNo)
+                @Html.ValidationMessageFor(model => model.PhoneNo)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.NID, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.NID)
+                @Html.ValidationMessageFor(model => model.NID)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.RegistrationNo, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.RegistrationNo)
+                @Html.ValidationMessageFor(model => model.RegistrationNo)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Gender, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.RadioButton("Gender", "Male")Male
+                @Html.RadioButton("Gender","Female")Female
+                @Html.ValidationMessageFor(model => model.Gender,"",new{@class="text-danger"})
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.DOB, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <input type="text" id="DOB" name="DOB"/>
+                @*@Html.EditorFor(model => model.DOB)*@
+                @Html.ValidationMessageFor(model => model.DOB)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Degree, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Degree)
+                @Html.ValidationMessageFor(model => model.Degree)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.SpecialityId, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <select name="SpecialityId" id="SpecialityId">
+                    <option value="">--Select Speciality--</option>
+                    @foreach (var speciality in ViewBag.Specialyty)
+                    {
+                        <option value="@speciality.Id">@speciality.SpecialityName</option>
+                    }
+                </select>
+
+                @Html.ValidationMessageFor(model => model.SpecialityId)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Password, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.PasswordFor(model => model.Password)
+                @Html.ValidationMessageFor(model => model.Password)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ConfirmPassword, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.PasswordFor(model => model.ConfirmPassword)
+                @Html.ValidationMessageFor(model => model.ConfirmPassword)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+<h3>@ViewBag.showMsg</h3>
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+<script src="~/Scripts/jquery-1.10.2.js"></script>
+<script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+<script src="~/Scripts/jquery.validate.js"></script>
+<script src="~/Scripts/ckeditor/ckeditor.js"></script>
+    @*@Scripts.Render("~/bundles/jqueryval")*@
+    <script>
+        $(document).ready(function () {
+            $("#DOB").datepicker({
+                showAnim: "clip",
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: "d M,yy",
+                maxDate:"getDate"
+            });
+            $("#registrationForm").validate({
+                rules: {
+                    Image: "required",
+                    Name: "required",
+                    Email: {
+                        required: true,
+                        email: true
+                    },
+                    PhoneNo: "required",
+                    NID: "required",
+                    RegistrationNo: "required",
+                    Gender: "required",
+                    DOB: "required",
+                    Degree: "required",
+                    Specialist: "required",
+                    Password: {
+                        required: true,
+                        minlength: 5
+                    },
+                    ConfirmPassword: {
+                        required: true,
+                        minlength: 5,
+                        equalTo: "#Password"
+                    },
+                },
+                messages: {
+                    Image: "Please select your picture",
+                    Name: "Please enter your name",
+                    Email: {
+                        required: "Please enter your Email",
+                        email: "Please enter a valid email"
+                    },
+                    PhoneNo: "Please enter your PhoneNo",
+                    NID: "Please enter your NID",
+                    RegistrationNo: "Please enter your RegistrationNo",
+                    Gender: "Please select your Gender",
+                    DOB: "Please select your DOB",
+                    Degree: "Please enter your Degree",
+                    Specialist: "Please select your Speciality",
+                    Password: {
+                        required: "Please provide a password",
+                        minlength: "Your password must be at least 5 characters long"
+                    },
+                    ConfirmPassword: {
+                        required: "Please provide a password",
+                        minlength: "Your password must be at least 5 characters long",
+                        equalTo: "Please enter the same password as above"
+                    }
+                }
+            });
+        });
+    </script>
+}
