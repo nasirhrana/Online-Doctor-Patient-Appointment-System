@@ -159,6 +159,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\DoctorController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PatientController.cs" />
     <Compile Include="Gateway\DrRegstrationGateway.cs" />
     <Compile Include="Global.asax.cs">
@@ -613,6 +614,10 @@
     <Content Include="Views\Patient\Delete.cshtml" />
     <Content Include="Views\Doctor\CreateSchedule.cshtml" />
     <Content Include="Views\Patient\SearchIndex.cshtml" />
+    <Content Include="Views\Home\Home.cshtml" />
+    <Content Include="Views\Shared\_Doctor.cshtml" />
+    <Content Include="Views\Shared\_Patient.cshtml" />
+    <Content Include="Views\Shared\_Admin.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

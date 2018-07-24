@@ -11,5 +11,8 @@ namespace ODASApp.ViewModel
         public string DoctorName { get; set; }
         public string Degree { get; set; }
         public string Specialist { get; set; }
+        public DateTime Date { get; set; }
+        public DateTime  StartTime { get; set; }
+        public DateTime EndTime { get; set; }
     }
 }

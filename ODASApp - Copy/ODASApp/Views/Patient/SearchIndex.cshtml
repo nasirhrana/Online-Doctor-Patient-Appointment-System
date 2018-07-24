@@ -1,4 +1,4 @@
-﻿
+﻿@model ODASApp.Models.Appointment
 @{
     ViewBag.Title = "SearchIndex";
     Layout = "~/Views/Shared/Registration.cshtml";
@@ -10,7 +10,7 @@
         <th>
             <label>Search By Doctors Name</label>
             <input class="form-control" id="drSearch" />
-        </th>
+        </th>  
         <th>
             <label>Search By Specialist</label>
             
@@ -39,16 +39,63 @@
             <tr>
                 <th>Id</th>
                 <th>Name</th>
+                <th>Degree</th>
                 <th>Speciality</th>
                 <th></th>
             </tr>
         </thead>
-        <tbody id="DoctorTableBody"></tbody>
-        <tr>
-            <th>@Html.ActionLink("Schedule", "Patient")</th>
-        </tr>
+        <tbody id="DoctorTableBody"></tbody>  
 
     </table></form>
+@using (Html.BeginForm(null, null, FormMethod.Post, new { name = "ScheduleTable", id = "ScheduleTable" }))
+{
+    <div class="row">
+        <div class="col-md-3">
+            <label>Id</label>
+           
+            <div class="col-md-6">
+                <input type="text" id="DoctorId" name="DoctorId" />
+            </div >
+            <label> Date</label>            
+                        
+            <div class="col-md-6">
+                <input type="text" id="Date" name="Date" />
+            </div>
+                
+        </div>
+            <div class="col-md-3">
+                    <div class="col-md-6">
+                        <input type="text" id="Start_Time" name="Start_Time" />
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" id="End_Time" name="End_Time" />
+                    </div>
+            </div>
+        
+        
+        
+    </div>
+    
+}
+@*<form>
+    <table class="table table-striped table-bordered" id="ScheduleTable">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Date</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody id="ScheduleTableBody"></tbody>
+        <tr>
+            <td>
+                @Html.ActionLink("ew","PatientCreate","Patient")
+            </td>
+        </tr>
+    </table>
+</form>*@
     
     
 
@@ -61,6 +108,7 @@
 
         $(document).ready(function () {
             $("#DoctorTable").hide();
+            $("#ScheduleTable").hide();
             $("#SpecialityId").change(function () {
                 var spId = $("#SpecialityId").val();
                 $("#DoctorId").empty();
@@ -91,7 +139,9 @@
         $("#DoctorId").change(function () {
             var drId = $("#DoctorId").val();
             $("#DoctorTable").show();
+            $("#ScheduleTable").show();
             $("#DoctorTableBody").empty();
+            $("#ScheduleTableBody").empty();
             var json = { doctorId: drId };
             $.ajax({
                 type: "POST",
@@ -103,9 +153,9 @@
                     //alert(data);
                     $.each(data, function (key, value) {
                         //alert(value.StudentId);
-                        $("#DoctorTable").append('<tr><td>' + value.Id + '</td><td>' + value.DoctorName +
-                            '</td><td>' + value.SpecialityName + '</td></tr>');
-    
+                        $("#DoctorTable").append('<tr><td>' + value.Id + '</td><td>' + value.DoctorName +'</td><td>'+value.Degree+'</td><td>' + value.Specialist + '</td></tr>');
+                        $("#ScheduleTable").append('<td>' + value.Id + '</td><td>' + value.Date + '</td><td>' + value.StartTime + '</td><td>' + value.EndTime + '</td>');
+
                     });
                 },
                 error: {

@@ -130,7 +130,7 @@ namespace ODASApp.Controllers
         [HttpPost]
         public ActionResult CreateSchedule(DrSchedule aSchedule)
         {
-            aSchedule.DoctorId = 2;
+            aSchedule.DoctorId = 1005;
             try
             {
                 if (ModelState.IsValid)

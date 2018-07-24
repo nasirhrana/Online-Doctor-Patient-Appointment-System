@@ -361,10 +361,11 @@ namespace ODASApp.Gateway
         }
         public List<DoctorViewModel> GetDoctorById(int doctorId)
         {
-            string query = @"Select p.SpecialityName ,s.Id, s.DoctorName, s.Degree 
-                           from [dbo].[Speciality] p
-                           inner join [dbo].[DrRegistration] s on  p.Id  = s.SpecialityId
-                           where p.Id = '" + doctorId + "'";
+            string query = @"Select p.Id,p.DoctorName,p.Degree, s.SpecialityName, k.Date,k.[Start-Time],k.[End-Time]   
+                            from DrRegistration p
+                            inner join Speciality s on s.Id=p.specialityId 
+                            inner join [dbo].[DrSchedule] k on p.Id=k.DoctorId
+                            where p.Id = '" + doctorId + "'";
                 SqlCommand cmd = new SqlCommand(query, con);
                 con.Open();
                 SqlDataReader reader = cmd.ExecuteReader();
@@ -376,6 +377,9 @@ namespace ODASApp.Gateway
                     aModel.DoctorName = reader["DoctorName"].ToString();
                     aModel.Degree = reader["Degree"].ToString();
                     aModel.Specialist = reader["SpecialityName"].ToString();
+                    aModel.Date = (DateTime) reader["Date"];
+                    aModel.StartTime = (DateTime) reader["Start-Time"];
+                    aModel.EndTime = (DateTime) reader["End-Time"];
                     aList.Add(aModel);
                 }
                 reader.Close();
