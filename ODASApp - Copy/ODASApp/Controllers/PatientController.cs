@@ -15,43 +15,6 @@ namespace ODASApp.Controllers
         private DrRegistrationManager aManager = new DrRegistrationManager();
         //
         // GET: /Patient/
-        public ActionResult Index()
-        {
-            List<PtRegistration> aRegistrations = aManager.GetAllPatient();
-            return View(aRegistrations);
-        }
-        [HttpGet]
-        public ActionResult PatientCreate()
-        {
-            return View();
-        }
-        [HttpPost]
-        public ActionResult PatientCreate(PtRegistration aRegistration)
-        {
-            try
-            {
-                if (ModelState.IsValid)
-                {
-                    int message = aManager.PtSave(aRegistration);
-                    if (message > 0)
-                    {
-                        ViewBag.showMsg = "Insert Successfully";
-                    }
-                    else
-                    {
-                        ViewBag.showMsg = "failed to Insert! please try again";
-                    }
-                }
-            }
-            catch (Exception exception)
-            {
-                ViewBag.showMsg = exception.Message;
-
-            }
-
-            return View();
-        }
-
         public ActionResult Details(int? id)
         {
             PtRegistration aRegistration = aManager.GetPatient(id);
@@ -86,37 +49,6 @@ namespace ODASApp.Controllers
                 ViewBag.showMsg = exception.Message;
 
             }
-            return View();
-        }
-        [HttpGet]
-        public ActionResult Delete(int? id)
-        {
-            PtRegistration aRegistration = aManager.GetPatient(id);
-            return View(aRegistration);
-        }
-        [HttpPost]
-        [ActionName("Delete")]
-        public ActionResult ConfirmDelete(int? id)
-        {
-            try
-            {
-                int message = aManager.PtDelete(id);
-
-                if (message > 0)
-                {
-                    ViewBag.showMsg = "Deleted Successfully";
-                }
-                else
-                {
-                    ViewBag.showMsg = "failed to Delete! please try again";
-                }
-            }
-            catch (Exception exception)
-            {
-                ViewBag.showMsg = exception.Message;
-
-            }
-
             return View();
         }
 

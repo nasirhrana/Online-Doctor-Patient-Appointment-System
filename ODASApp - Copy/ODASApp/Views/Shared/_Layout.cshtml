@@ -35,13 +35,14 @@
                 <ul class="nav navbar-nav navbar-right">
                     <li>@Html.ActionLink("Login", "Login", "Login")</li>
                     <li>
-                        @*@Html.ActionLink("Registration for Doctor", "Create", "Doctor")*@
-                        <select>
+                        @Html.ActionLink("Registration for Doctor", "Create", "Doctor")
+                        @*<select>
                             <option>Register</option>
                             @*<option >@Html.ActionLink("Registration for Doctor", "Create", "Doctor")</option>*@
-                            <option value="12345" data-url="@Url.Action("Create", "Doctor")">Registration for Doctor</option>
-                        </select>
+                            @*<option value="12345" data-url="@Url.Action("Create", "Doctor")">Registration for Doctor</option>
+                        </select>*@
                     </li>
+                    <li>@Html.ActionLink("Registration for Patient", "PatientCreate", "Patient")</li>
                     
                 </ul>
                    

@@ -1,15 +1,14 @@
 ﻿@model ODASApp.Models.DrRegistration
-
 @{
     ViewBag.Title = "Details";
-    Layout = "~/Views/Shared/_Doctor.cshtml";
+    Layout = "~/Views/Shared/_Admin.cshtml";
 }
 
 <h2>Details</h2>
 
 <div>
     <h4>DrRegistration</h4>
-	<hr />
+    <hr />
     <dl class="dl-horizontal">
         <dt>
             @Html.DisplayNameFor(model => model.Image)
@@ -103,5 +102,6 @@
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Delete", "Delete", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "DoctorIndex")
 </p>

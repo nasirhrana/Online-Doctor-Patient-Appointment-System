@@ -2,7 +2,7 @@
 
 @{
     ViewBag.Title = "CreateSchedule";
-    Layout = "~/Views/Shared/Registration.cshtml";
+    Layout = "~/Views/Shared/_Doctor.cshtml";
 }
 @section styles{
 
@@ -64,9 +64,6 @@
 }
 <p>@ViewBag.message</p>
 
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
 
 @section Scripts {
     @*@Scripts.Render("~/bundles/jqueryval")*@

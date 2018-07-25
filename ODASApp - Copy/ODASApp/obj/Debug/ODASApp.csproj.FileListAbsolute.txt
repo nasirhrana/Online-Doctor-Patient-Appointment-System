@@ -162,4 +162,3 @@ C:\Users\nasir\Desktop\dowload from github\Online-Doctor-Patient-Appointment-Sys
 C:\Users\nasir\Desktop\dowload from github\Online-Doctor-Patient-Appointment-System\ODASApp - Copy\ODASApp\bin\Microsoft.Owin.Security.MicrosoftAccount.xml
 C:\Users\nasir\Desktop\dowload from github\Online-Doctor-Patient-Appointment-System\ODASApp - Copy\ODASApp\obj\Debug\ODASApp.dll
 C:\Users\nasir\Desktop\dowload from github\Online-Doctor-Patient-Appointment-System\ODASApp - Copy\ODASApp\obj\Debug\ODASApp.pdb
-C:\Users\nasir\Desktop\dowload from github\Online-Doctor-Patient-Appointment-System\ODASApp - Copy\ODASApp\obj\Debug\ODASApp.csprojResolveAssemblyReference.cache

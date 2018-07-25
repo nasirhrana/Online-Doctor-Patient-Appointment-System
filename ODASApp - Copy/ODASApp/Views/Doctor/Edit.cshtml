@@ -2,7 +2,7 @@
 
 @{
     ViewBag.Title = "Edit";
-    Layout = "~/Views/Shared/Registration.cshtml";
+    Layout = "~/Views/Shared/_Doctor.cshtml";
 }
 
 <h2>Edit</h2>
@@ -125,9 +125,6 @@
 }
 <p>@ViewBag.showMsg</p>
 
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

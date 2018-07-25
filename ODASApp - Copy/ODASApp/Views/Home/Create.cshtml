@@ -1,21 +1,17 @@
 ﻿@model ODASApp.Models.DrRegistration
-
 @{
     ViewBag.Title = "Create";
-    Layout = "~/Views/Shared/Registration.cshtml";
+    Layout = "~/Views/Shared/_Home.cshtml";
 }
-@section styles{
-    
-}
-<h2>Create</h2>
+
+<h2>Registration for Doctor</h2>
 
 
-@using (Html.BeginForm(null, null, FormMethod.Post, new { name = "registrationForm", id = "registrationForm" })) 
+@using (Html.BeginForm(null, null, FormMethod.Post, new { name = "registrationForm", id = "registrationForm" }))
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
-        <h4>DrRegistration</h4>
         <hr />
         @Html.ValidationSummary(true)
 
@@ -23,7 +19,7 @@
             @Html.LabelFor(model => model.Image, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.Image)
-                @Html.ValidationMessageFor(model => model.Image,null,new{@class="MyClass"})
+                @Html.ValidationMessageFor(model => model.Image, null, new { @class = "MyClass" })
             </div>
         </div>
 
@@ -71,15 +67,15 @@
             @Html.LabelFor(model => model.Gender, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.RadioButton("Gender", "Male")Male
-                @Html.RadioButton("Gender","Female")Female
-                @Html.ValidationMessageFor(model => model.Gender,"",new{@class="text-danger"})
+                @Html.RadioButton("Gender", "Female")Female
+                @Html.ValidationMessageFor(model => model.Gender, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.DOB, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                <input type="text" id="DOB" name="DOB"/>
+                <input type="text" id="DOB" name="DOB" />
                 @*@Html.EditorFor(model => model.DOB)*@
                 @Html.ValidationMessageFor(model => model.DOB)
             </div>
@@ -126,31 +122,28 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="submit" value="Submit" class="btn btn-default" />
             </div>
         </div>
     </div>
 }
 <h3>@ViewBag.showMsg</h3>
 
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
 
 @section Scripts {
-<script src="~/Scripts/jquery-1.10.2.js"></script>
-<script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
-<script src="~/Scripts/jquery.validate.js"></script>
-<script src="~/Scripts/ckeditor/ckeditor.js"></script>
+    <script src="~/Scripts/jquery-1.10.2.js"></script>
+    <script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/ckeditor/ckeditor.js"></script>
     @*@Scripts.Render("~/bundles/jqueryval")*@
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             $("#DOB").datepicker({
                 showAnim: "clip",
                 changeMonth: true,
                 changeYear: true,
                 dateFormat: "d M,yy",
-                maxDate:"getDate"
+                maxDate: "getDate"
             });
             $("#registrationForm").validate({
                 rules: {
