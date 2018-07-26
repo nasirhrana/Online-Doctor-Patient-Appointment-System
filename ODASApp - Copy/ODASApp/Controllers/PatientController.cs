@@ -15,15 +15,36 @@ namespace ODASApp.Controllers
         private DrRegistrationManager aManager = new DrRegistrationManager();
         //
         // GET: /Patient/
+        public ActionResult Index()
+        {
+            if (Session["Id"] == null)
+            {
+                return RedirectToAction("Home", "Home");
+                ;
+            }
+            return View();
+        }
         public ActionResult Details(int? id)
         {
-            PtRegistration aRegistration = aManager.GetPatient(id);
+            if (Session["Id"] == null)
+            {
+                return RedirectToAction("Home", "Home");
+                ;
+            }
+            int userId = (int)Session["Id"];
+            PtRegistration aRegistration = aManager.GetPatient(userId);
             return View(aRegistration);
         }
         [HttpGet]
         public ActionResult Edit(int? id)
         {
-            PtRegistration aRegistration = aManager.GetPatient(id);
+            if (Session["Id"] == null)
+            {
+                return RedirectToAction("Home", "Home");
+                ;
+            }
+            int userId = (int)Session["Id"];
+            PtRegistration aRegistration = aManager.GetPatient(userId);
             return View(aRegistration);
         }
         [HttpPost]

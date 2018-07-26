@@ -1,0 +1,73 @@
+﻿@model ODASApp.Models.Login
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Home.cshtml";
+}
+
+<h2>Login Page</h2>
+            @using (Html.BeginForm("Index", "Login", FormMethod.Post, new { name = "loginForm", id = "loginForm" }))
+            {
+                @Html.AntiForgeryToken()
+                <h4>Use a local account to log in.</h4>
+                <hr />
+                @Html.ValidationSummary(true)
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label" })
+                    <div class="col-md-10">
+                        <input type="email" class="user" id="Email" name="Email" placeholder="Enter Your Email" />
+                        @Html.ValidationMessageFor(m => m.Email)
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
+                    <div class="col-md-10">
+                        <input type="password" class="user" id="Password" name="Password" placeholder="Enter Your Password" />
+                        @Html.ValidationMessageFor(m => m.Password)
+                    </div>
+                </div>
+                <div class="form-group">
+            @Html.LabelFor(model => model.UserType, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.RadioButton("UserType", "Admin")Admin
+                @Html.RadioButton("UserType", "Doctor")Doctor
+                @Html.RadioButton("UserType", "Patient")Patient
+                @Html.ValidationMessageFor(model => model.UserType, "", new { @class = "text-danger" })
+            </div>
+        </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Log in" class="btn btn-default" />
+                    </div>
+                </div>
+            }
+<h4>@ViewBag.message</h4>
+@section Scripts {
+    
+<script src="~/Scripts/jquery-1.10.2.js"></script>
+<script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+<script src="~/Scripts/jquery.validate.js"></script>
+    <script>
+        $(document).ready(function() {
+            $("#loginForm").validate({
+                rules: {
+                    Email: {
+                        required: true,
+                        email: true
+                    },
+                    Password: "required",
+                    UserType: "required",
+
+                },
+                messages: {
+                    Email: {
+                        required: "Please enter your Email",
+                        email: "Please enter a valid email"
+                    },
+                    Password: "Please Enter Your Password!",
+                    UserType: "Please select your UserType",
+                }
+            });
+    });
+    </script>
+
+}

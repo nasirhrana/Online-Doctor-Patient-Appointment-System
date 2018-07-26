@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace ODASApp.Models
 {
@@ -14,6 +15,8 @@ namespace ODASApp.Models
         public string Image { get; set; }
         public string  Name{ get; set; }
         [Required]
+        [EmailAddress]
+        [Remote("IsPatientEmailExists", "Home", ErrorMessage = "Email already exists!")]
         public string Email { get; set; }
         [Required]
         public string PhoneNo { get; set; }
@@ -27,7 +30,7 @@ namespace ODASApp.Models
         public string Password { get; set; }
         [Required]
         [NotMapped]
-        [Compare("Password")]
+        [System.ComponentModel.DataAnnotations.Compare("Password")]
         public string  ConfirmPassword { get; set; }
     }
 }

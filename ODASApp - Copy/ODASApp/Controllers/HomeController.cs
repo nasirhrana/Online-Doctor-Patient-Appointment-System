@@ -13,8 +13,14 @@ namespace ODASApp.Controllers
         //
         // GET: /Home/
         private DrRegistrationManager aManager=new DrRegistrationManager();
+        private LoginManager aLoginManager=new LoginManager();
         public ActionResult Home()
         {
+            if (Session["user"] != null)
+            {
+                Session["user"] = null;
+                ;
+            }
             return View();
         }
         [HttpGet]
@@ -81,6 +87,30 @@ namespace ODASApp.Controllers
             }
 
             return View();
+        }
+        public JsonResult IsDoctorEmailExists(string email)
+        {
+            bool isExist = aLoginManager.IsDoctorEmailExists(email);
+
+            if (isExist)
+                return Json(false, JsonRequestBehavior.AllowGet);
+            else
+            {
+                return Json(true, JsonRequestBehavior.AllowGet);
+
+            }
+        }
+        public JsonResult IsPatientEmailExists(string email)
+        {
+            bool isExist = aLoginManager.IsPatientEmailExists(email);
+
+            if (isExist)
+                return Json(false, JsonRequestBehavior.AllowGet);
+            else
+            {
+                return Json(true, JsonRequestBehavior.AllowGet);
+
+            }
         }
 	}  
 }

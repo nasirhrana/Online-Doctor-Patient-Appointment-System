@@ -33,9 +33,16 @@
                     <li>@Html.ActionLink("Patient List", "PatientIndex", "Admin")</li>
                     @*<li>@Html.ActionLink("Contact", "Contact", "Home")</li>*@
                 </ul>
+                <div>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>  @Session["user"]</li>
+                        <li> <i class=" fa fa-sign-out"> @Html.ActionLink("Logout", "LogOut", "Login")</i></li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
+
     <div class="container body-content">
         @RenderBody()
         <hr />

@@ -16,17 +16,34 @@ namespace ODASApp.Controllers
 
         public ActionResult Index()
         {
+            if (Session["Id"] == null)
+            {
+                return RedirectToAction("Home", "Home");
+                ;
+            }
             return View();
         }
-        public ActionResult Details(int?id)
+        public ActionResult Details(int? id)
         {
-            DrRegistration aRegistration = aManager.Get(id);
+            if (Session["Id"]==null)
+            {
+                return RedirectToAction("Home", "Home");
+                ;
+            }
+            int userId = (int) Session["Id"];
+            DrRegistration aRegistration = aManager.Get(userId);
             return View(aRegistration);
         }
         [HttpGet]
         public ActionResult Edit(int?id)
         {
-            DrRegistration aRegistration = aManager.Get(id);
+            if (Session["Id"] == null)
+            {
+                return RedirectToAction("Home", "Home");
+                ;
+            }
+            int userId = (int)Session["Id"];
+            DrRegistration aRegistration = aManager.Get(userId);
             return View(aRegistration);
         }
         [HttpPost]
@@ -58,12 +75,18 @@ namespace ODASApp.Controllers
         [HttpGet]
         public ActionResult CreateSchedule()
         {
+            if (Session["Id"] == null)
+            {
+                return RedirectToAction("Home", "Home");
+                ;
+            }
+            
             return View();
         }
         [HttpPost]
         public ActionResult CreateSchedule(DrSchedule aSchedule)
         {
-            aSchedule.DoctorId = 1005;
+            aSchedule.DoctorId = (int)Session["Id"];
             try
             {
                 if (ModelState.IsValid)

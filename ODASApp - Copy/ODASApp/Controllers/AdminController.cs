@@ -15,26 +15,51 @@ namespace ODASApp.Controllers
         private DrRegistrationManager aManager=new DrRegistrationManager();
         public ActionResult Index()
         {
+            if (Session["Id"] == null)
+            {
+                return RedirectToAction("Home", "Home");
+                ;
+            }
             return View();
         }
         public ActionResult DoctorIndex()
         {
+            if (Session["Id"] == null)
+            {
+                return RedirectToAction("Home", "Home");
+                ;
+            }
             List<DrRegistration> aList = aManager.GetAll();
             return View(aList);
         }
         public ActionResult PatientIndex()
         {
+            if (Session["Id"] == null)
+            {
+                return RedirectToAction("Home", "Home");
+                ;
+            }
             List<PtRegistration> aRegistrations = aManager.GetAllPatient();
             return View(aRegistrations);
         }
         public ActionResult Details(int? id)
         {
+            if (Session["Id"] == null)
+            {
+                return RedirectToAction("Home", "Home");
+                ;
+            }
             DrRegistration aRegistration = aManager.Get(id);
             return View(aRegistration);
         }
         [HttpGet]
         public ActionResult Delete(int? id)
         {
+            if (Session["Id"] == null)
+            {
+                return RedirectToAction("Home", "Home");
+                ;
+            }
             DrRegistration aRegistration = aManager.Get(id);
             return View(aRegistration);
         }
@@ -65,12 +90,22 @@ namespace ODASApp.Controllers
         }
         public ActionResult PatientDetails(int? id)
         {
+            if (Session["Id"] == null)
+            {
+                return RedirectToAction("Home", "Home");
+                ;
+            }
             PtRegistration aRegistration = aManager.GetPatient(id);
             return View(aRegistration);
         }
         [HttpGet]
         public ActionResult PatientDelete(int? id)
         {
+            if (Session["Id"] == null)
+            {
+                return RedirectToAction("Home", "Home");
+                ;
+            }
             PtRegistration aRegistration = aManager.GetPatient(id);
             return View(aRegistration);
         }

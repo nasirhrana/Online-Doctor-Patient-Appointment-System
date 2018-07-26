@@ -108,6 +108,7 @@ H:\ODAS\ODASApp - Copy\ODASApp\bin\Microsoft.Owin.Security.MicrosoftAccount.xml
 H:\ODAS\ODASApp - Copy\ODASApp\obj\Debug\ODASApp.dll
 H:\ODAS\ODASApp - Copy\ODASApp\obj\Debug\ODASApp.pdb
 H:\ODAS\ODASApp - Copy\ODASApp\obj\Debug\ODASApp.csprojResolveAssemblyReference.cache
+C:\Users\nasir\Desktop\dowload from github\Online-Doctor-Patient-Appointment-System\ODASApp - Copy\ODASApp\bin\System.Web.Razor.xml
 C:\Users\nasir\Desktop\dowload from github\Online-Doctor-Patient-Appointment-System\ODASApp - Copy\ODASApp\bin\ODASApp.dll.config
 C:\Users\nasir\Desktop\dowload from github\Online-Doctor-Patient-Appointment-System\ODASApp - Copy\ODASApp\bin\ODASApp.dll
 C:\Users\nasir\Desktop\dowload from github\Online-Doctor-Patient-Appointment-System\ODASApp - Copy\ODASApp\bin\ODASApp.pdb
@@ -140,7 +141,6 @@ C:\Users\nasir\Desktop\dowload from github\Online-Doctor-Patient-Appointment-Sys
 C:\Users\nasir\Desktop\dowload from github\Online-Doctor-Patient-Appointment-System\ODASApp - Copy\ODASApp\bin\System.Web.Helpers.xml
 C:\Users\nasir\Desktop\dowload from github\Online-Doctor-Patient-Appointment-System\ODASApp - Copy\ODASApp\bin\System.Web.Mvc.xml
 C:\Users\nasir\Desktop\dowload from github\Online-Doctor-Patient-Appointment-System\ODASApp - Copy\ODASApp\bin\System.Web.Optimization.xml
-C:\Users\nasir\Desktop\dowload from github\Online-Doctor-Patient-Appointment-System\ODASApp - Copy\ODASApp\bin\System.Web.Razor.xml
 C:\Users\nasir\Desktop\dowload from github\Online-Doctor-Patient-Appointment-System\ODASApp - Copy\ODASApp\bin\System.Web.WebPages.xml
 C:\Users\nasir\Desktop\dowload from github\Online-Doctor-Patient-Appointment-System\ODASApp - Copy\ODASApp\bin\System.Web.WebPages.Deployment.xml
 C:\Users\nasir\Desktop\dowload from github\Online-Doctor-Patient-Appointment-System\ODASApp - Copy\ODASApp\bin\System.Web.WebPages.Razor.xml
