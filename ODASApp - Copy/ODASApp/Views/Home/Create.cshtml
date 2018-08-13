@@ -7,8 +7,33 @@
 <h2>Registration for Doctor</h2>
 
 
-@using (Html.BeginForm(null, null, FormMethod.Post, new { name = "registrationForm", id = "registrationForm" }))
+@using (Html.BeginForm(null, null, FormMethod.Post, new { name = "registrationForm", id = "registrationForm",enctype="multipart/form-data"}))
 {
+    <style type="text/css">
+input[type="file"] {
+     display: none;
+}
+
+.custom-file-upload {
+    border: 1px solid rgb(197, 197, 197);
+    /*border-radius: 4px 4px 4px 4px;*/
+
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+    float: left;
+    width: 5.25em;
+    margin-left:5px;
+}
+
+.photo{
+    width: 100px; 
+    height: 100px; 
+    border: 1px solid rgb(197, 197, 197); 
+    border-radius: 4px 4px 4px 4px; 
+    float:left;
+}
+</style>
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
@@ -18,7 +43,11 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Image, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Image)
+                <img id="blah" class="photo"  />
+                <label for="ImageFile" class="custom-file-upload">
+                    <i class="fa fa-cloud-upload"></i>Add Image
+                </label>
+                <input type='file' id="ImageFile" name="ImageFile" />
                 @Html.ValidationMessageFor(model => model.Image, null, new { @class = "MyClass" })
             </div>
         </div>
@@ -143,7 +172,8 @@
                 changeMonth: true,
                 changeYear: true,
                 dateFormat: "d M,yy",
-                maxDate: "getDate"
+                maxDate: "getDate",
+                minDate:new Date(1800,0,1)
             });
             $("#registrationForm").validate({
                 rules: {
@@ -194,6 +224,20 @@
                         equalTo: "Please enter the same password as above"
                     }
                 }
+            });
+            function readURL(input) {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+
+                    reader.onload = function(e) {
+                        $('#blah').attr('src', e.target.result);
+                    };
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+
+            $("#ImageFile").change(function () {
+                readURL(this);
             });
         });
     </script>

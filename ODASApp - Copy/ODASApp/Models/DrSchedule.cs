@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Threading;
 using System.Web;
 
 namespace ODASApp.Models
@@ -11,11 +12,16 @@ namespace ODASApp.Models
         public int Id { get; set; }
         public int DoctorId { get; set; }
         [Required]
-        public DateTime Date { get; set; }
+        [DataType(DataType.Date)]
+        public DateTime AppointmentDate { get; set; }
         [Required]
-        public DateTime Start_Time { get; set; }
+        [DisplayFormat(DataFormatString = "{0:HH:mm}", ApplyFormatInEditMode = true)]
+        [DataType(DataType.Time)]
+        public string StartTime { get; set; }
         [Required]
-        public DateTime End_Time { get; set; }
+        [DisplayFormat(DataFormatString = "{0:HH:mm}", ApplyFormatInEditMode = true)]
+        [DataType(DataType.Time)]
+        public string EndTime { get; set; }
         
     }
 }

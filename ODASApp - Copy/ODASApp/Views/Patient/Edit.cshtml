@@ -10,6 +10,31 @@
 
 @using (Html.BeginForm())
 {
+    <style type="text/css">
+input[type="file"] {
+     display: none;
+}
+
+.custom-file-upload {
+    border: 1px solid rgb(197, 197, 197);
+    /*border-radius: 4px 4px 4px 4px;*/
+
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+    float: left;
+    width: 5.25em;
+    margin-left:5px;
+}
+
+.photo{
+    width: 100px; 
+    height: 100px; 
+    border: 1px solid rgb(197, 197, 197); 
+    border-radius: 4px 4px 4px 4px; 
+    float:left;
+}
+</style>
     @Html.AntiForgeryToken()
     
     <div class="form-horizontal">
@@ -104,5 +129,80 @@
 
 
 @section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
+    @*@Scripts.Render("~/bundles/jqueryval")*@
+<script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+<script src="~/Scripts/jquery.validate.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#DOB").datepicker({
+            showAnim: "clip",
+            changeMonth: true,
+            changeYear: true,
+            dateFormat: "d M,yy",
+            maxDate: "getDate"
+
+        });
+        $("#registrationForm").validate({
+            rules: {
+                Image: "required",
+                Name: "required",
+                Email: {
+                    required: true,
+                    email: true
+                },
+                PhoneNo: "required",
+                NID: "required",
+                Gender: "required",
+                DOB: "required",
+                Password: {
+                    required: true,
+                    minlength: 5
+                },
+                ConfirmPassword: {
+                    required: true,
+                    minlength: 5,
+                    equalTo: "#Password"
+                },
+            },
+            messages: {
+                Image: "Please select your picture",
+                Name: "Please enter your name",
+                Email: {
+                    required: "Please enter your Email",
+                    email: "Please enter a valid email"
+                },
+                PhoneNo: "Please enter your PhoneNo",
+                NID: "Please enter your NID",
+                Gender: "Please select your Gender",
+                DOB: "Please select your DOB",
+
+                Password: {
+                    required: "Please provide a password",
+                    minlength: "Your password must be at least 5 characters long"
+                },
+                ConfirmPassword: {
+                    required: "Please provide a password",
+                    minlength: "Your password must be at least 5 characters long",
+                    equalTo: "Please enter the same password as above"
+                }
+            }
+
+        });
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#blah').attr('src', e.target.result);
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        $("#ImageFile").change(function () {
+            readURL(this);
+        });
+    });
+</script>
+
 }

@@ -245,10 +245,10 @@ namespace ODASApp.Gateway
         {
             string query = @"INSERT INTO [dbo].[DrSchedule]
            ([DoctorId]
-           ,[Date]
-           ,[Start-Time]
-           ,[End-Time])
-     VALUES('"+aSchedule.DoctorId+"','"+aSchedule.Date+"','"+aSchedule.Start_Time+"','"+aSchedule.End_Time+"')";
+           ,[AppointmentDate]
+           ,[StartTime]
+           ,[EndTime])
+     VALUES('" + aSchedule.DoctorId + "','" + aSchedule.AppointmentDate + "','" + aSchedule.StartTime + "','" + aSchedule.EndTime + "')";
             SqlCommand cmd=new SqlCommand(query,con);
             con.Open();
             int rowAffected = cmd.ExecuteNonQuery();
@@ -257,17 +257,19 @@ namespace ODASApp.Gateway
 
         public bool IsDateExist(DrSchedule aSchedule)
         {
-            string query = @"SELECT * FROM [dbo].[DrSchedule] WHERE (Date <= @Date AND DoctorId = @DoctorId)";
+            string query = @"SELECT * FROM [dbo].[DrSchedule] WHERE (AppointmentDate= @AppointmentDate AND DoctorId=@DoctorId )";
             SqlCommand cmd=new SqlCommand(query,con);
+            
             con.Open();
             cmd.Parameters.Clear();
-            cmd.Parameters.Add("Date", SqlDbType.Date);
-            cmd.Parameters["Date"].Value = aSchedule.Date;
+            cmd.Parameters.Add("AppointmentDate", SqlDbType.Date);
+            cmd.Parameters["AppointmentDate"].Value = aSchedule.AppointmentDate;
             cmd.Parameters.Add("DoctorId", SqlDbType.Int);
             cmd.Parameters["DoctorId"].Value = aSchedule.DoctorId;
             SqlDataReader reader = cmd.ExecuteReader();
             reader.Read();
-            bool isExist = reader.HasRows;
+            bool isExist = false;
+             isExist = reader.HasRows;
             reader.Close();
             con.Close();
             return isExist;
@@ -275,19 +277,20 @@ namespace ODASApp.Gateway
 
         public bool IsTimeExist(DrSchedule aSchedule)
         {
-            string query = @"SELECT * FROM [dbo].[DrSchedule] WHERE ([Start-Time] <= @End_Time AND [End-Time]<=@Start_Time AND [DoctorId] = @DoctorId)";
-            SqlCommand cmd = new SqlCommand();
+            string query = @"SELECT * FROM [dbo].[DrSchedule] WHERE (StartTime <= @EndTime AND EndTime>=@StartTime AND DoctorId=@DoctorId)";
+            SqlCommand cmd = new SqlCommand(query,con);
+            bool isExist = false;
             con.Open();
             cmd.Parameters.Clear();
-            cmd.Parameters.Add("[Start-Time]", SqlDbType.Date);
-            cmd.Parameters["[Start-Time]"].Value = aSchedule.Start_Time;
-            cmd.Parameters.Add("[End-Time]", SqlDbType.Date);
-            cmd.Parameters["[End-Time]"].Value = aSchedule.End_Time;
-            cmd.Parameters.Add("[DoctorId]", SqlDbType.Int);
-            cmd.Parameters["[DoctorId]"].Value = aSchedule.DoctorId;
+            cmd.Parameters.Add("@StartTime", SqlDbType.Char);
+            cmd.Parameters["StartTime"].Value = aSchedule.StartTime;
+            cmd.Parameters.Add("EndTime", SqlDbType.Char);
+            cmd.Parameters["EndTime"].Value = aSchedule.EndTime;
+            cmd.Parameters.Add("@DoctorId", SqlDbType.Int);
+            cmd.Parameters["DoctorId"].Value = aSchedule.DoctorId;
             SqlDataReader reader = cmd.ExecuteReader();
             reader.Read();
-            bool isExist = reader.HasRows;
+              isExist = reader.HasRows;
             reader.Close();
             con.Close();
             return isExist;
@@ -315,7 +318,7 @@ namespace ODASApp.Gateway
         }
 
         public List<Speciality> GetAllSpeciality()
-        {
+         {
             string query = @"select * from [dbo].[Speciality]";
             SqlCommand cmd=new SqlCommand(query, con);
             con.Open();
@@ -361,7 +364,7 @@ namespace ODASApp.Gateway
         }
         public List<DoctorViewModel> GetDoctorById(int doctorId)
         {
-            string query = @"Select p.Id,p.DoctorName,p.Degree, s.SpecialityName, k.Date,k.[Start-Time],k.[End-Time]   
+            string query = @"Select p.Id,p.DoctorName,p.Degree, s.SpecialityName,k.ScheduleId,CONVERT(varchar, k.AppointmentDate, 101) as date,k.[StartTime],k.[EndTime]   
                             from DrRegistration p
                             inner join Speciality s on s.Id=p.specialityId 
                             inner join [dbo].[DrSchedule] k on p.Id=k.DoctorId
@@ -374,12 +377,13 @@ namespace ODASApp.Gateway
                 {
                     DoctorViewModel aModel = new DoctorViewModel();
                     aModel.Id = (int)reader["Id"];
+                    aModel.ScheduleId = (int) reader["ScheduleId"];
                     aModel.DoctorName = reader["DoctorName"].ToString();
                     aModel.Degree = reader["Degree"].ToString();
                     aModel.Specialist = reader["SpecialityName"].ToString();
-                    aModel.Date = (DateTime) reader["Date"];
-                    aModel.StartTime = (DateTime) reader["Start-Time"];
-                    aModel.EndTime = (DateTime) reader["End-Time"];
+                    aModel.Date = reader["date"].ToString();
+                    aModel.StartTime = reader["StartTime"].ToString();
+                    aModel.EndTime = reader["EndTime"].ToString();
                     aList.Add(aModel);
                 }
                 reader.Close();
@@ -388,6 +392,257 @@ namespace ODASApp.Gateway
             
             
         }
-        
+
+        public Appointment GetDoctorAppointment(int? id)
+        {
+            string query = @"SELECT [ScheduleId]
+      ,[DoctorId]
+      ,CONVERT(varchar, AppointmentDate, 101) as date
+      ,[StartTime]
+      ,[EndTime]
+  FROM [dbo].[DrSchedule] where ScheduleId='" + id + "'";
+            SqlCommand cmd=new SqlCommand(query,con);
+            con.Open();
+            SqlDataReader reader = cmd.ExecuteReader();
+            Appointment appointment=new Appointment();
+            while (reader.Read())
+            {
+                appointment.ScheduleId = (int) reader["ScheduleId"];
+                appointment.DoctorId = (int)reader["DoctorId"];
+                appointment.AppointmentDate = Convert.ToDateTime(reader["date"].ToString());
+                appointment.StartTime = reader["StartTime"].ToString();
+                appointment.EndTime = reader["EndTime"].ToString();
+                
+            }
+            reader.Close();
+            con.Close();
+            return appointment;
+        }
+
+        public int GetAppointment(Appointment appointment)
+        {
+            string query = @"INSERT INTO [dbo].[Appointment]
+           ([ScheduleId]
+           ,[DoctorId]
+           ,[PatientId]
+           ,[Date]
+           ,[StartTime]
+           ,[EndTime]
+           ,[Status])
+     VALUES ('"+appointment.ScheduleId+"','" + appointment.DoctorId + "','" + appointment.PateintId + "','" + appointment.AppointmentDate + "','" + appointment.StartTime + "','" + appointment.EndTime + "','" + appointment.Status + "')";
+            SqlCommand cmd=new SqlCommand(query, con);
+            con.Open();
+            int rowAffected = cmd.ExecuteNonQuery();
+            con.Close();
+            return rowAffected;
+        }
+
+        public bool IsScheduleExist(Appointment appointment)
+        {
+            string query = @"SELECT * FROM [dbo].[Appointment] WHERE (ScheduleId=@ScheduleId and PatientId=@PatientId)";
+            SqlCommand cmd = new SqlCommand(query, con);
+            con.Open();
+            bool isExist = false;
+            cmd.Parameters.AddWithValue("@ScheduleId", appointment.ScheduleId);
+            cmd.Parameters.AddWithValue("@PatientId", appointment.PateintId);
+            SqlDataReader reader = cmd.ExecuteReader();
+            reader.Read();
+            isExist = reader.HasRows;
+            reader.Close();
+            con.Close();
+            return isExist;
+        }
+
+        public List<CheckStatusViewModel> GetAppointmentById(int id)
+        {
+            string query = @"SELECT a.Date,a.StartTime,a.EndTime,a.Status,p.DoctorName,s.SpecialityName
+FROM [dbo].[Appointment] a inner join [dbo].[DrRegistration] p on a.DoctorId=p.Id
+inner join [dbo].[Speciality]  s on s.Id=p.SpecialityId
+                   where a.PatientId='" + id+"'";
+            SqlCommand cmd=new SqlCommand(query,con);
+            con.Open();
+            SqlDataReader reader = cmd.ExecuteReader();
+            List<CheckStatusViewModel> alList = new List<CheckStatusViewModel>();
+            while (reader.Read())
+            {
+                CheckStatusViewModel appointment = new CheckStatusViewModel();
+                appointment.DoctorName = reader["DoctorName"].ToString();
+                appointment.Speciality = reader["SpecialityName"].ToString();
+                appointment.AppointmentDate = reader["Date"].ToString();
+                appointment.StartTime = reader["StartTime"].ToString();
+                appointment.EndTime = reader["EndTime"].ToString();
+                appointment.Status = reader["Status"].ToString();
+                alList.Add(appointment);
+                
+            }
+            reader.Close();
+            con.Close();
+            return alList;
+        }
+
+        public List<CheckStatusViewModel> GetAllSubmitttedAppointment()
+        {
+            string query = @"SELECT a.Id, a.PatientId,a.ScheduleId, a.Date,a.StartTime,a.EndTime,a.Status,p.DoctorName,s.SpecialityName
+                            FROM [dbo].[Appointment] a inner join [dbo].[DrRegistration] p on a.DoctorId=p.Id
+                            inner join [dbo].[Speciality]  s on s.Id=p.SpecialityId
+                            where Status='Submit'";
+            SqlCommand cmd=new SqlCommand(query,con);
+            con.Open();
+            SqlDataReader reader = cmd.ExecuteReader();
+            List<CheckStatusViewModel> alList = new List<CheckStatusViewModel>();
+            while (reader.Read())
+            {
+                CheckStatusViewModel appointment = new CheckStatusViewModel();
+                appointment.AppointmentId = (int)reader["Id"];
+                appointment.PatientId = (int) reader["PatientId"];
+                appointment.ScheduleId = (int)reader["ScheduleId"];
+                appointment.DoctorName = reader["DoctorName"].ToString();
+                appointment.Speciality = reader["SpecialityName"].ToString();
+                appointment.AppointmentDate = reader["Date"].ToString();
+                appointment.StartTime = reader["StartTime"].ToString();
+                appointment.EndTime = reader["EndTime"].ToString();
+                appointment.Status = reader["Status"].ToString();
+                alList.Add(appointment);
+                
+            }
+            reader.Close();
+            con.Close();
+            return alList;
+
+        }
+
+        public int Approve(int appointmentId)
+        {
+            string query = @"update [dbo].[Appointment] set Status='Approved'
+                           where Id='" + appointmentId + "'";
+            SqlCommand cmd = new SqlCommand(query, con);
+            con.Open();
+            int rowAffected = cmd.ExecuteNonQuery();
+            con.Close();
+            return rowAffected;
+
+        }
+
+        public int Reject(int appointmentId)
+        {
+            string query = @"update [dbo].[Appointment] set Status='Reject'
+                           where Id='" + appointmentId + "' ";
+            SqlCommand cmd = new SqlCommand(query, con);
+            con.Open();
+            int rowAffected = cmd.ExecuteNonQuery();
+            con.Close();
+            return rowAffected;
+        }
+
+        public List<CheckStatusViewModel> GetAllApprovedAppointment()
+        {
+            string query = @"SELECT a.Id, a.PatientId,a.ScheduleId, a.Date,a.StartTime,a.EndTime,a.Status,p.DoctorName,s.SpecialityName
+                            FROM [dbo].[Appointment] a inner join [dbo].[DrRegistration] p on a.DoctorId=p.Id
+                            inner join [dbo].[Speciality]  s on s.Id=p.SpecialityId
+                            where Status='Approved'";
+            SqlCommand cmd = new SqlCommand(query, con);
+            con.Open();
+            SqlDataReader reader = cmd.ExecuteReader();
+            List<CheckStatusViewModel> alList = new List<CheckStatusViewModel>();
+            while (reader.Read())
+            {
+                CheckStatusViewModel appointment = new CheckStatusViewModel();
+                appointment.AppointmentId = (int)reader["Id"];
+                appointment.PatientId = (int)reader["PatientId"];
+                appointment.ScheduleId = (int)reader["ScheduleId"];
+                appointment.DoctorName = reader["DoctorName"].ToString();
+                appointment.Speciality = reader["SpecialityName"].ToString();
+                appointment.AppointmentDate = reader["Date"].ToString();
+                appointment.StartTime = reader["StartTime"].ToString();
+                appointment.EndTime = reader["EndTime"].ToString();
+                appointment.Status = reader["Status"].ToString();
+                alList.Add(appointment);
+
+            }
+            reader.Close();
+            con.Close();
+            return alList;
+        }
+        public List<CheckStatusViewModel> GetAllRejectedAppointment()
+        {
+            string query = @"SELECT a.Id, a.PatientId,a.ScheduleId, a.Date,a.StartTime,a.EndTime,a.Status,p.DoctorName,s.SpecialityName
+                            FROM [dbo].[Appointment] a inner join [dbo].[DrRegistration] p on a.DoctorId=p.Id
+                            inner join [dbo].[Speciality]  s on s.Id=p.SpecialityId
+                            where Status='Reject'";
+            SqlCommand cmd = new SqlCommand(query, con);
+            con.Open();
+            SqlDataReader reader = cmd.ExecuteReader();
+            List<CheckStatusViewModel> alList = new List<CheckStatusViewModel>();
+            while (reader.Read())
+            {
+                CheckStatusViewModel appointment = new CheckStatusViewModel();
+                appointment.AppointmentId = (int)reader["Id"];
+                appointment.PatientId = (int)reader["PatientId"];
+                appointment.ScheduleId = (int)reader["ScheduleId"];
+                appointment.DoctorName = reader["DoctorName"].ToString();
+                appointment.Speciality = reader["SpecialityName"].ToString();
+                appointment.AppointmentDate = reader["Date"].ToString();
+                appointment.StartTime = reader["StartTime"].ToString();
+                appointment.EndTime = reader["EndTime"].ToString();
+                appointment.Status = reader["Status"].ToString();
+                alList.Add(appointment);
+
+            }
+            reader.Close();
+            con.Close();
+            return alList;
+        }
+
+        public List<CheckStatusViewModel> GetEmail(int appointmentId)
+        {
+            string query = @"select a.Date,a.StartTime,a.EndTime,p.PatientName,p.Email
+                            from Appointment a
+                            inner join [dbo].[PtRegistration] p on p.Id=a.PatientId
+                            where a.Id='"+appointmentId+"'";
+            SqlCommand cmd = new SqlCommand(query, con);
+            con.Open();
+            SqlDataReader reader = cmd.ExecuteReader();
+            List<CheckStatusViewModel> alList = new List<CheckStatusViewModel>();
+            while (reader.Read())
+            {
+                CheckStatusViewModel appointment = new CheckStatusViewModel();
+                appointment.PatientName = reader["PatientName"].ToString();
+                appointment.AppointmentDate = reader["Date"].ToString();
+                appointment.StartTime = reader["StartTime"].ToString();
+                appointment.EndTime = reader["EndTime"].ToString();
+                appointment.PatientEmail = reader["Email"].ToString();
+                alList.Add(appointment);
+
+            }
+            reader.Close();
+            con.Close();
+            return alList;
+        }
+        public List<CheckStatusViewModel> GetsubmitedEmail(int appointmentId)
+        {
+            string query = @"select a.Date,a.StartTime,a.EndTime,p.PatientName,p.Email
+                            from [dbo].[PtRegistration] p
+                            inner join [dbo].[Appointment] a on p.Id=a.PatientId
+                            where p.Id='" + appointmentId + "'";
+            SqlCommand cmd = new SqlCommand(query, con);
+            con.Open();
+            SqlDataReader reader = cmd.ExecuteReader();
+            List<CheckStatusViewModel> alList = new List<CheckStatusViewModel>();
+            while (reader.Read())
+            {
+                CheckStatusViewModel appointment = new CheckStatusViewModel();
+                appointment.PatientName = reader["PatientName"].ToString();
+                appointment.AppointmentDate = reader["Date"].ToString();
+                appointment.StartTime = reader["StartTime"].ToString();
+                appointment.EndTime = reader["EndTime"].ToString();
+                appointment.PatientEmail = reader["Email"].ToString();
+                alList.Add(appointment);
+
+            }
+            reader.Close();
+            con.Close();
+            return alList;
+        }
+
     }
 }

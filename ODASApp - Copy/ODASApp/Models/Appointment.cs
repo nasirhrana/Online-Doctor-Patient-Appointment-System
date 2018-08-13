@@ -9,11 +9,13 @@ namespace ODASApp.Models
     public class Appointment
     {
         public int Id { get; set; }
+        public int ScheduleId { get; set; }
         public int DoctorId { get; set; }
-        public int PatientId { get; set; }
-        public string Date { get; set; }
-        public string Start_Time { get; set; }
-        public string End_Time { get; set; }
+        public int PateintId { get; set; }
+        public DateTime AppointmentDate { get; set; }
+        public string StartTime { get; set; }
+        public string EndTime { get; set; }
         public string Status { get; set; }
+
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -33,10 +34,13 @@ namespace ODASApp.Controllers
         public ActionResult Create(DrRegistration aRegistration)
         {
             ViewBag.Specialyty = aManager.GetAllSpeciality();
-            try
-            {
-                if (ModelState.IsValid)
-                {
+            string fileName = Path.GetFileNameWithoutExtension(aRegistration.ImageFile.FileName);
+            string extension = Path.GetExtension(aRegistration.ImageFile.FileName);
+            fileName = aRegistration.NID+ extension;
+            aRegistration.Image = "~/Image/" + fileName;
+            fileName = Path.Combine(Server.MapPath("~/Image/"), fileName);
+            aRegistration.ImageFile.SaveAs(fileName);
+            
                     int message = aManager.Save(aRegistration);
                     if (message > 0)
                     {
@@ -45,13 +49,6 @@ namespace ODASApp.Controllers
                     else
                     {
                         ViewBag.showMsg = "failed to Insert! please try again";
-                    }
-                }
-            }
-            catch (Exception exception)
-            {
-                ViewBag.showMsg = exception.Message;
-
             }
 
 
@@ -65,10 +62,12 @@ namespace ODASApp.Controllers
         [HttpPost]
         public ActionResult PatientCreate(PtRegistration aRegistration)
         {
-            try
-            {
-                if (ModelState.IsValid)
-                {
+            string fileName = Path.GetFileNameWithoutExtension(aRegistration.ImageFile.FileName);
+            string extension = Path.GetExtension(aRegistration.ImageFile.FileName);
+            fileName = aRegistration.NID + extension;
+            aRegistration.Image = "~/Image/" + fileName;
+            fileName = Path.Combine(Server.MapPath("~/Image/"), fileName);
+            aRegistration.ImageFile.SaveAs(fileName);
                     int message = aManager.PtSave(aRegistration);
                     if (message > 0)
                     {
@@ -78,13 +77,6 @@ namespace ODASApp.Controllers
                     {
                         ViewBag.showMsg = "failed to Insert! please try again";
                     }
-                }
-            }
-            catch (Exception exception)
-            {
-                ViewBag.showMsg = exception.Message;
-
-            }
 
             return View();
         }

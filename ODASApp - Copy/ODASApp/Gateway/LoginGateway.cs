@@ -82,7 +82,7 @@ where Email = '" + aLogin.Email + "' and Password = '" + aLogin.Password + "'";
             {
                 Login alogin = new Login();
                 alogin.Id = (int)reader["Id"];
-                alogin.Name = reader["DoctorName"].ToString();
+                alogin.Name = reader["PatientName"].ToString();
                 alogin.Email = reader["Email"].ToString();
                 alogin.Password = reader["Password"].ToString();
                 aList.Add(alogin);
@@ -93,25 +93,25 @@ where Email = '" + aLogin.Email + "' and Password = '" + aLogin.Password + "'";
         }
         public bool IsDoctorEmailExists(string email)
         {
-            
-                bool isExists = false;
 
-                string query = "SELECT Email FROM [dbo].[DrRegistration] WHERE Email= @Email ";
-                SqlCommand cmd = new SqlCommand(query, con);
-                con.Open();
-                cmd.Parameters.Clear();
+            bool isExists = false;
 
-                cmd.Parameters.Add("@Email", SqlDbType.VarChar).Value = email;
-                
-                SqlDataReader reader = cmd.ExecuteReader();
-                if (reader.Read())
-                {
-                    isExists = true;
-                }
+            string query = "SELECT Email FROM [dbo].[DrRegistration] WHERE Email= @Email ";
+            SqlCommand cmd = new SqlCommand(query, con);
+            con.Open();
+            cmd.Parameters.Clear();
 
-                reader.Close();
-                con.Close();
-                return isExists;
+            cmd.Parameters.Add("@Email", SqlDbType.VarChar).Value = email;
+
+            SqlDataReader reader = cmd.ExecuteReader();
+            if (reader.Read())
+            {
+                isExists = true;
+            }
+
+            reader.Close();
+            con.Close();
+            return isExists;
 
         }
         public bool IsPatientEmailExists(string email)
@@ -125,7 +125,7 @@ where Email = '" + aLogin.Email + "' and Password = '" + aLogin.Password + "'";
             cmd.Parameters.Clear();
 
             cmd.Parameters.Add("@Email", SqlDbType.VarChar).Value = email;
-            
+
             SqlDataReader reader = cmd.ExecuteReader();
             if (reader.Read())
             {

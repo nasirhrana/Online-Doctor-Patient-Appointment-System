@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.ComponentModel;
 
 namespace ODASApp.Models
 {
@@ -12,7 +13,10 @@ namespace ODASApp.Models
     {
         public int Id { get; set; }
         [Required]
+        [DisplayName("Upload File")]
         public string Image { get; set; }
+        [NotMapped]
+        public HttpPostedFileBase ImageFile { get; set; }
         [Required]
         public string Name { get; set; }
         [Required]

@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using ODASApp.Manager;
 using ODASApp.Models;
+using ODASApp.ViewModel;
 
 namespace ODASApp.Controllers
 {
@@ -134,5 +135,60 @@ namespace ODASApp.Controllers
 
             return View();
         }
+
+        public ActionResult Check()
+        {
+            if (Session["Id"] == null)
+            {
+                return RedirectToAction("Home", "Home");
+                ;
+            }
+            List<CheckStatusViewModel> aList = aManager.GetAllSubmitttedAppointment();
+            return View(aList);
+        }
+        public ActionResult Approve(int appointmentId)
+        {
+            aManager.Approve(appointmentId);
+            List<CheckStatusViewModel> userEmail = aManager.GetEmail(appointmentId);
+            bool result = aManager.SendEmail(userEmail[0].PatientEmail, "About your leave application",
+                "<p>Hello '" + userEmail[0].PatientName + "' <br/>Your Leave Application  date '" +
+                userEmail[0].AppointmentDate + "' and start time '" + userEmail[0].StartTime + "', end time " +
+                userEmail[0].EndTime + " are Approved by  Admin<br/>Thank You<br/></p>");
+            return RedirectToAction("Check");
+        }
+
+        public ActionResult Reject(int appointmentId)
+        {
+            aManager.Reject(appointmentId);
+            List<CheckStatusViewModel> userEmail = aManager.GetEmail(appointmentId);
+            bool result = aManager.SendEmail(userEmail[0].PatientEmail, "About your leave application",
+                "<p>Hello '" + userEmail[0].PatientName + "' <br/>Your Leave Application  date '" +
+                userEmail[0].AppointmentDate + "' and start time '" + userEmail[0].StartTime + "', end time " +
+                userEmail[0].EndTime + " are Rejected by  Admin<br/>Thank You<br/></p>");
+            return RedirectToAction("Check");
+        }
+
+        public ActionResult Approved()
+        {
+            if (Session["Id"] == null)
+            {
+                return RedirectToAction("Home", "Home");
+                ;
+            }
+            List<CheckStatusViewModel> aList = aManager.GetAllApprovedAppointment();
+            return View(aList);
+        }
+
+        public ActionResult Rejected()
+        {
+            if (Session["Id"] == null)
+            {
+                return RedirectToAction("Home", "Home");
+                ;
+            }
+            List<CheckStatusViewModel> aList = aManager.GetAllRejectedAppointment();
+            return View(aList);
+        }
+
 	}
 }

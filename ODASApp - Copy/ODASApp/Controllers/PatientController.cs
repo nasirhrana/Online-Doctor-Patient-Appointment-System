@@ -75,6 +75,11 @@ namespace ODASApp.Controllers
 
         public ActionResult SearchIndex()
         {
+            if (Session["Id"] == null)
+            {
+                return RedirectToAction("Home", "Home");
+                ;
+            }
             ViewBag.Specialyty = aManager.GetAllSpeciality();
             return View();
         }
@@ -95,7 +100,54 @@ namespace ODASApp.Controllers
         {
 
             List<DoctorViewModel> aList = aManager.GetDoctorById(doctorId);
-            return Json(aList.ToList(), JsonRequestBehavior.AllowGet);
+            return Json(aList, JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult Appointment(int id)
+        {
+            if (Session["Id"] == null)
+            {
+                return RedirectToAction("Home", "Home");
+                ;
+            }
+            Appointment aModel = aManager.GetDoctorAppointment(id);
+            aModel.PateintId = (int)Session["Id"];
+            int appointmentId = aModel.PateintId;
+            aModel.Status = "Submit";
+            if (aManager.IsScheduleExist(aModel))
+            {
+                ViewBag.msg="you already booked this schedule";
+            }
+            else
+            {
+                int message = aManager.GetAppointment(aModel);
+                if (message > 0)
+                {
+                    List<CheckStatusViewModel> userEmail = aManager.GetsubmitedEmail(appointmentId);
+                    bool result = aManager.SendEmail(userEmail[0].PatientEmail, "About your leave application",
+                        "<p>Hello '" + userEmail[0].PatientName + "' <br/>Your Leave Application  date '" +
+                        userEmail[0].AppointmentDate + "' and start time '" + userEmail[0].StartTime + "', end time " +
+                        userEmail[0].EndTime + " are submitted successfully<br/>Thank You<br/></p>");
+                    ViewBag.msg = "Submit successfully";
+                }
+                else
+                {
+                    ViewBag.msg = "failed to submit";
+                }
+            }
+            
+            return RedirectToAction("AppointmentStatus");
+        }
+
+        public ActionResult AppointmentStatus()
+          {
+              if (Session["Id"] == null)
+              {
+                  return RedirectToAction("Home", "Home");
+                  ;
+              }
+            int id = (int)Session["Id"];
+            List<CheckStatusViewModel> aList = aManager.GetAppointmentById(id);
+            return View(aList);
         }
     }
 }

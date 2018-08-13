@@ -4,9 +4,6 @@
     ViewBag.Title = "CreateSchedule";
     Layout = "~/Views/Shared/_Doctor.cshtml";
 }
-@section styles{
-
-}
 
 <h2>CreateSchedule</h2>
 
@@ -29,29 +26,26 @@
         </div>*@
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Date, new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.AppointmentDate, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                <input type="text" id="Date" name="Date" />
-                @*@Html.EditorFor(model => model.Date)*@
-                @Html.ValidationMessageFor(model => model.Date)
+                <input type="text" id="AppointmentDate" name="AppointmentDate" />
+                @Html.ValidationMessageFor(model => model.AppointmentDate)
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Start_Time, new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.StartTime, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                <input type="text" id="Start_Time" name="[Start-Time]" />
-                @*@Html.EditorFor(model => model.Start_Time)*@
-                @Html.ValidationMessageFor(model => model.Start_Time)
+                <input type="text" id="StartTime" name="StartTime" />
+                @Html.ValidationMessageFor(model => model.StartTime)
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.End_Time, new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.EndTime, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                <input type="text" id="End_Time" name="[End-Time]" />
-                @*@Html.EditorFor(model => model.End_Time)*@
-                @Html.ValidationMessageFor(model => model.End_Time)
+                <input type="text" id="EndTime" name="EndTime" />
+                @Html.ValidationMessageFor(model => model.EndTime)
             </div>
         </div>
 
@@ -62,45 +56,69 @@
         </div>
     </div>
 }
-<p>@ViewBag.message</p>
 
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
 
 @section Scripts {
     @*@Scripts.Render("~/bundles/jqueryval")*@
-    <script src="~/Scripts/jquery-1.10.2.js"></script>
-    <script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
-    <script src="~/Scripts/jquery.validate.js"></script>
-    <script src="~/Scripts/ckeditor/ckeditor.js"></script>
-    <script>
-        $(document).ready(function() {
-            $("#Date").datepicker({
-                showAnim: "clip",
-                changeMonth: true,
-                changeYear: true,
-                dateFormat: "d M,yy",
-                minDate: "getDate"
+<script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+<script src="~/Scripts/jquery.validate.js"></script>
+<script src="~/Scripts/jquery.timepicker.min.js"></script>
+<script src="~/Scripts/jquery-ui-timepicker-addon.min.js"></script>
+<script  type="text/javascript">
+    $(document).ready(function () {
+        $("#AppointmentDate").datepicker({
+            showAnim: "clip",
+            changeMonth: true,
+            changeYear: true,
+            dateFormat: "d M,yy",
+            minDate: "getDate"
 
-            });
-            $("#Start_Time").datetimepicker({
-                //minDate: "getDate"
-            });
-            $("#End_Time").datetimepicker({
-                //minDate: "getDate"
-            });
-
-            $("#scheduleForm").validate({
-                rules: {
-                    Date: "required",
-                    '[Start-Time]': "required",
-                    '[End-Time]': "required",
-                },
-                messages: {
-                    Date: "Please select your Date",
-                    '[Start-Time]': "Please enter your Start_Time",
-                    '[End-Time]': "Please enter your End_Time",
-                }
-
-            });
         });
-    </script>
+
+
+        
+            //$(".Start_Time").datetimepicker({
+            //    changeMonth: true,
+            //    changeYear: true,
+            //    yearRange: "-100:+0",
+            //    dateFormat: 'dd-M-yy',
+            //    controlType: 'select',
+            //    timeFormat: 'hh:mm TT'
+            //});
+
+        $('#StartTime').timepicker({
+            //showAnim: "clip",
+            //changeMonth: true,
+            //changeYear: true,
+            //dateFormat: "d M,yy",
+            //minDate: "getDate"
+        });
+
+        $("#EndTime").timepicker({
+            //showAnim: "clip",
+            //changeMonth: true,
+            //changeYear: true,
+            //dateFormat: "d M,yy",
+            //minDate: "getDate"
+        });
+
+        $("#scheduleForm").validate({
+            rules: {
+                AppointmentDate: "required",
+                StartTime: "required",
+                EndTime: "required",
+            },
+            messages: {
+                AppointmentDate: "Please select your Date",
+                StartTime: "Please enter your StartTime",
+                EndTime: "Please enter your EndTime",
+            }
+
+        });
+    });
+</script>
+
 }
