@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -42,6 +43,7 @@ namespace ODASApp.Controllers
                 return RedirectToAction("Home", "Home");
                 ;
             }
+            ViewBag.Specialyty = aManager.GetAllSpeciality();
             int userId = (int)Session["Id"];
             DrRegistration aRegistration = aManager.Get(userId);
             return View(aRegistration);
@@ -49,6 +51,21 @@ namespace ODASApp.Controllers
         [HttpPost]
         public ActionResult Edit(DrRegistration aRegistration)
         {
+            ViewBag.Specialyty = aManager.GetAllSpeciality();
+            string fileName = Path.GetFileNameWithoutExtension(aRegistration.ImageFile.FileName);
+            string extension = Path.GetExtension(aRegistration.ImageFile.FileName);
+            fileName = aRegistration.NID + extension;
+            
+            aRegistration.Image = "~/Image/" + fileName;
+            var checkfileName = Server.MapPath(fileName);
+            if (System.IO.File.Exists(checkfileName))
+            {
+                System.IO.File.Delete(fileName);
+            }
+
+            fileName = Path.Combine(Server.MapPath("~/Image/"), fileName);
+            
+            aRegistration.ImageFile.SaveAs(fileName);
             try
             {
                 if (ModelState.IsValid)
@@ -70,7 +87,7 @@ namespace ODASApp.Controllers
 
             }
 
-            return View();
+            return RedirectToAction("Index");
         }
         [HttpGet]
         public ActionResult CreateSchedule()

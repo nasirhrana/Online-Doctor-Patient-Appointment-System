@@ -6,52 +6,30 @@
 }
 
 <h2>Edit</h2>
+@*<style type="text/css">
+ 
+</style>*@
 
 
-@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "registrationForm", name = "registrationForm" ,encTtpe="multipart/form-data"}))
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { name = "registrationForm", id = "registrationForm", enctype = "multipart/form-data" }))
 {
-    <style type="text/css">
-input[type="file"] {
-     display: none;
-}
-
-.custom-file-upload {
-    border: 1px solid rgb(197, 197, 197);
-    /*border-radius: 4px 4px 4px 4px;*/
-
-    display: inline-block;
-    padding: 6px 12px;
-    cursor: pointer;
-    float: left;
-    width: 5.25em;
-    margin-left:5px;
-}
-
-.photo{
-    width: 100px; 
-    height: 100px; 
-    border: 1px solid rgb(197, 197, 197); 
-    border-radius: 4px 4px 4px 4px; 
-    float:left;
-}
-</style>
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
-        <h4>DrRegistration</h4>
         <hr />
         @Html.ValidationSummary(true)
-        @Html.HiddenFor(model => model.Id)
 
         <div class="form-group">
             @Html.LabelFor(model => model.Image, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                <img id="blah" class="photo" />
+                @*<img id="blah" class="photo" />*@
+                <img src="@Url.Content(Model.Image)" width="250" id="blah" class="photo" />
                 <label for="ImageFile" class="custom-file-upload">
                     <i class="fa fa-cloud-upload"></i>Add Image
                 </label>
                 <input type='file' id="ImageFile" name="ImageFile" />
-                @Html.ValidationMessageFor(model => model.Image)
+                @Html.ValidationMessageFor(model => model.Image, null, new { @class = "MyClass" })
             </div>
         </div>
 
@@ -100,15 +78,14 @@ input[type="file"] {
             <div class="col-md-10">
                 @Html.RadioButton("Gender", "Male")Male
                 @Html.RadioButton("Gender", "Female")Female
-                @*@Html.EditorFor(model => model.Gender)*@
-                @Html.ValidationMessageFor(model => model.Gender)
+                @Html.ValidationMessageFor(model => model.Gender, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.DOB, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                <input type="date" id="DOB" name="DOB"/>
+                <input type="text" id="DOB" name="DOB" />
                 @*@Html.EditorFor(model => model.DOB)*@
                 @Html.ValidationMessageFor(model => model.DOB)
             </div>
@@ -125,7 +102,14 @@ input[type="file"] {
         <div class="form-group">
             @Html.LabelFor(model => model.SpecialityId, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.SpecialityId)
+                <select name="SpecialityId" id="SpecialityId">
+                    <option value="">--Select Speciality--</option>
+                    @foreach (var speciality in ViewBag.Specialyty)
+                    {
+                        <option value="@speciality.Id">@speciality.SpecialityName</option>
+                    }
+                </select>
+
                 @Html.ValidationMessageFor(model => model.SpecialityId)
             </div>
         </div>
@@ -137,6 +121,7 @@ input[type="file"] {
                 @Html.ValidationMessageFor(model => model.Password)
             </div>
         </div>
+
         <div class="form-group">
             @Html.LabelFor(model => model.ConfirmPassword, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
@@ -147,18 +132,20 @@ input[type="file"] {
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
+                <input type="submit" value="Submit" class="btn btn-default" />
             </div>
         </div>
     </div>
 }
-<p>@ViewBag.showMsg</p>
+<h3>@ViewBag.showMsg</h3>
 
 
 @section Scripts {
+    <script src="~/Scripts/jquery-1.10.2.js"></script>
+    <script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/ckeditor/ckeditor.js"></script>
     @*@Scripts.Render("~/bundles/jqueryval")*@
-<script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
-<script src="~/Scripts/jquery.validate.js"></script>
     <script>
         $(document).ready(function () {
             $("#DOB").datepicker({

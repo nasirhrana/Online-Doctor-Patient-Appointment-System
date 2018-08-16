@@ -38,6 +38,7 @@ namespace ODASApp.Controllers
             string extension = Path.GetExtension(aRegistration.ImageFile.FileName);
             fileName = aRegistration.NID+ extension;
             aRegistration.Image = "~/Image/" + fileName;
+            
             fileName = Path.Combine(Server.MapPath("~/Image/"), fileName);
             aRegistration.ImageFile.SaveAs(fileName);
             
