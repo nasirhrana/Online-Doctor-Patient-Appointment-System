@@ -63,16 +63,16 @@
         <link href="~/Content/jquery.dataTables.multiselect.css" rel="stylesheet" />
         <script>
 
-            $(document).ready(function() {
-                var id;
-                var name;
+            $(document).ready(function () {
+                var id = [];
+                var name=[];
                 $("#DoctorTable").hide();
                 $("#ScheduleTable").hide();
                 $("#SpecialityId").change(function() {
-                        var spId = $("#SpecialityId").val();
-                        $("#DoctorId").empty();
-                        $("#DoctorId").append('<option value="">--Select--</option>');
-                        var json = { specialityId: spId };
+                    var spId = $("#SpecialityId").val();
+                    $("#DoctorId").empty();
+                    $("#DoctorId").append('<option value="">--Select--</option>');
+                    var json = { specialityId: spId };
                     $.ajax({
                         type: "POST",
                         url: '@Url.Action("GetBySpecialityId", "Patient")',
@@ -80,74 +80,55 @@
                         contentType: "application/json; charset=utf-8",
                         data: JSON.stringify(json),
                         success: function (data) {
-                            
-                            if (data.length == 2) {
-                                $("#DoctorId").append('<option value=' + data[0].Id + '>' + data[0].DoctorName + '</option>');
-                            }
-                            if (data.length == 1) {
-                                $("#DoctorId").append('<option value=' + data[0].Id + '>' + data[0].DoctorName + '</option>');
-                            }
-                            for (var i = 0; i < data.length;i++) {
-                                id = data[i].Id;
-                                name = data[i].DoctorName;
-                                
-                                
-
-                                for (var j =i+1; j < data.length; j++) {
-                                    if (id == data[j].Id) {
-                                        
-                                        $("#DoctorId").append('<option value=' + id + '>' + name + '</option>');
-                                        i = j;
-                                    }
-                                    else {
-                                        id = data[j].Id;
-                                        name = data[j].DoctorName;
-                                        $("#DoctorId").append('<option value=' + id + '>' + name + '</option>');
-                                    }
-                                   
+                            for (var i = 0; i < data.length; i++) {
+                                if (id.indexOf(data[i].Id)===-1) {
+                                    id.push(data[i].Id);
+                                    name.push(data[i].DoctorName);
                                 }
-                                
                             }
-                    },
-                    error:
-                {
+                            for (var j = 0; j < id.length; j++) {
+                                $("#DoctorId").append('<option value=' + id[j] + '>' + name[j] + '</option>');
+                            }
 
-                },
-                complete: {
+                        },
+                        error: {
 
-                }
-            });
-        });
+                        },
+                        complete: {
 
-                $("#DoctorId").change(function () {
-                var drId = $("#DoctorId").val();             
-                var json = { doctorId: drId };
-                $.ajax({
-                    type: "POST",
-                    url: '@Url.Action("GetDoctorById", "Patient")',
-                    //url: '/Department/GetStudentsByDepartmentId',
-                    contentType: "application/json; charset=utf-8",
-                    data: JSON.stringify(json),
-                    success: function (data) {
-                        $("#tableId").dataTable({
-                            destroy: true,
-                            data: data,
-                            columns:
-                            [
-                                { 'data': 'Id' },
-                                { 'data': 'DoctorName' },
-                                { 'data': 'Degree' },
-                                { 'data': 'Specialist' },
-                                { 'data': 'Date' },
-                                { 'data': 'StartTime' },
-                                { 'data': 'EndTime' },
-                                { "targets": [8], "data": "ScheduleId", "render": function(data, type, full) { return '@Html.ActionLink("Select", "Appointment", new {id = "replace"})'.replace("replace", data); } }
-                            ],
-                        });
-                    }
+                        },
+                    });
+                });
+
+                $("#DoctorId").change(function() {
+                    var drId = $("#DoctorId").val();
+                    var json = { doctorId: drId };
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("GetDoctorById", "Patient")',
+                        //url: '/Department/GetStudentsByDepartmentId',
+                        contentType: "application/json; charset=utf-8",
+                        data: JSON.stringify(json),
+                        success: function(data) {
+                            $("#tableId").dataTable({
+                                destroy: true,
+                                data: data,
+                                columns:
+                                [
+                                    { 'data': 'Id' },
+                                    { 'data': 'DoctorName' },
+                                    { 'data': 'Degree' },
+                                    { 'data': 'Specialist' },
+                                    { 'data': 'Date' },
+                                    { 'data': 'StartTime' },
+                                    { 'data': 'EndTime' },
+                                    { "targets": [8], "data": "ScheduleId", "render": function(data, type, full) { return '@Html.ActionLink("Select", "Appointment", new {id = "replace"})'.replace("replace", data); } }
+                                ],
+                            });
+                        }
+                    });
                 });
             });
-        });
 
 
             $("#drSearch").autocomplete({
@@ -169,5 +150,5 @@
             });
 
         </script>
-        }
+    }
     
