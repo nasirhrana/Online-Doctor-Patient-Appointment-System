@@ -9,6 +9,7 @@ using System.Web.Configuration;
 using Microsoft.Owin.Security.Provider;
 using ODASApp.Models;
 using ODASApp.ViewModel;
+using WebGrease.Css.Ast.Selectors;
 
 namespace ODASApp.Gateway
 {
@@ -282,11 +283,11 @@ namespace ODASApp.Gateway
             bool isExist = false;
             con.Open();
             cmd.Parameters.Clear();
-            cmd.Parameters.Add("@StartTime", SqlDbType.Char);
+            cmd.Parameters.Add("StartTime", SqlDbType.Char);
             cmd.Parameters["StartTime"].Value = aSchedule.StartTime;
             cmd.Parameters.Add("EndTime", SqlDbType.Char);
             cmd.Parameters["EndTime"].Value = aSchedule.EndTime;
-            cmd.Parameters.Add("@DoctorId", SqlDbType.Int);
+            cmd.Parameters.Add("DoctorId", SqlDbType.Int);
             cmd.Parameters["DoctorId"].Value = aSchedule.DoctorId;
             SqlDataReader reader = cmd.ExecuteReader();
             reader.Read();
@@ -368,7 +369,9 @@ namespace ODASApp.Gateway
                             from DrRegistration p
                             inner join Speciality s on s.Id=p.specialityId 
                             inner join [dbo].[DrSchedule] k on p.Id=k.DoctorId
+       
                             where p.Id = '" + doctorId + "'";
+            
                 SqlCommand cmd = new SqlCommand(query, con);
                 con.Open();
                 SqlDataReader reader = cmd.ExecuteReader();
@@ -388,6 +391,7 @@ namespace ODASApp.Gateway
                 }
                 reader.Close();
                 con.Close();
+
                 return aList;
             
             
@@ -397,7 +401,7 @@ namespace ODASApp.Gateway
         {
             string query = @"SELECT [ScheduleId]
       ,[DoctorId]
-      ,CONVERT(varchar, AppointmentDate, 101) as date
+       , AppointmentDate
       ,[StartTime]
       ,[EndTime]
   FROM [dbo].[DrSchedule] where ScheduleId='" + id + "'";
@@ -409,7 +413,7 @@ namespace ODASApp.Gateway
             {
                 appointment.ScheduleId = (int) reader["ScheduleId"];
                 appointment.DoctorId = (int)reader["DoctorId"];
-                appointment.AppointmentDate = Convert.ToDateTime(reader["date"].ToString());
+                appointment.AppointmentDate = Convert.ToDateTime((reader["AppointmentDate"]).ToString());
                 appointment.StartTime = reader["StartTime"].ToString();
                 appointment.EndTime = reader["EndTime"].ToString();
                 
@@ -455,7 +459,7 @@ namespace ODASApp.Gateway
 
         public List<CheckStatusViewModel> GetAppointmentById(int id)
         {
-            string query = @"SELECT a.Date,a.StartTime,a.EndTime,a.Status,p.DoctorName,s.SpecialityName
+            string query = @"SELECT CONVERT(varchar, a.Date, 101) as Date ,a.StartTime,a.EndTime,a.Status,p.DoctorName,s.SpecialityName
 FROM [dbo].[Appointment] a inner join [dbo].[DrRegistration] p on a.DoctorId=p.Id
 inner join [dbo].[Speciality]  s on s.Id=p.SpecialityId
                    where a.PatientId='" + id+"'";
@@ -468,7 +472,7 @@ inner join [dbo].[Speciality]  s on s.Id=p.SpecialityId
                 CheckStatusViewModel appointment = new CheckStatusViewModel();
                 appointment.DoctorName = reader["DoctorName"].ToString();
                 appointment.Speciality = reader["SpecialityName"].ToString();
-                appointment.AppointmentDate = reader["Date"].ToString();
+                appointment.AppointmentDate = (reader["Date"]).ToString();
                 appointment.StartTime = reader["StartTime"].ToString();
                 appointment.EndTime = reader["EndTime"].ToString();
                 appointment.Status = reader["Status"].ToString();
@@ -482,7 +486,7 @@ inner join [dbo].[Speciality]  s on s.Id=p.SpecialityId
 
         public List<CheckStatusViewModel> GetAllSubmitttedAppointment()
         {
-            string query = @"SELECT a.Id, a.PatientId,a.ScheduleId, a.Date,a.StartTime,a.EndTime,a.Status,p.DoctorName,s.SpecialityName
+            string query = @"SELECT a.Id, a.PatientId,a.ScheduleId, convert(varchar, a.Date,101) as date,a.StartTime,a.EndTime,a.Status,p.DoctorName,s.SpecialityName
                             FROM [dbo].[Appointment] a inner join [dbo].[DrRegistration] p on a.DoctorId=p.Id
                             inner join [dbo].[Speciality]  s on s.Id=p.SpecialityId
                             where Status='Submit'";
@@ -498,7 +502,7 @@ inner join [dbo].[Speciality]  s on s.Id=p.SpecialityId
                 appointment.ScheduleId = (int)reader["ScheduleId"];
                 appointment.DoctorName = reader["DoctorName"].ToString();
                 appointment.Speciality = reader["SpecialityName"].ToString();
-                appointment.AppointmentDate = reader["Date"].ToString();
+                appointment.AppointmentDate = reader["date"].ToString();
                 appointment.StartTime = reader["StartTime"].ToString();
                 appointment.EndTime = reader["EndTime"].ToString();
                 appointment.Status = reader["Status"].ToString();
@@ -536,7 +540,7 @@ inner join [dbo].[Speciality]  s on s.Id=p.SpecialityId
 
         public List<CheckStatusViewModel> GetAllApprovedAppointment()
         {
-            string query = @"SELECT a.Id, a.PatientId,a.ScheduleId, a.Date,a.StartTime,a.EndTime,a.Status,p.DoctorName,s.SpecialityName
+            string query = @"SELECT a.Id, a.PatientId,a.ScheduleId, convert(varchar, a.Date,101) as date,a.StartTime,a.EndTime,a.Status,p.DoctorName,s.SpecialityName
                             FROM [dbo].[Appointment] a inner join [dbo].[DrRegistration] p on a.DoctorId=p.Id
                             inner join [dbo].[Speciality]  s on s.Id=p.SpecialityId
                             where Status='Approved'";
@@ -552,7 +556,7 @@ inner join [dbo].[Speciality]  s on s.Id=p.SpecialityId
                 appointment.ScheduleId = (int)reader["ScheduleId"];
                 appointment.DoctorName = reader["DoctorName"].ToString();
                 appointment.Speciality = reader["SpecialityName"].ToString();
-                appointment.AppointmentDate = reader["Date"].ToString();
+                appointment.AppointmentDate = reader["date"].ToString();
                 appointment.StartTime = reader["StartTime"].ToString();
                 appointment.EndTime = reader["EndTime"].ToString();
                 appointment.Status = reader["Status"].ToString();
@@ -565,7 +569,7 @@ inner join [dbo].[Speciality]  s on s.Id=p.SpecialityId
         }
         public List<CheckStatusViewModel> GetAllRejectedAppointment()
         {
-            string query = @"SELECT a.Id, a.PatientId,a.ScheduleId, a.Date,a.StartTime,a.EndTime,a.Status,p.DoctorName,s.SpecialityName
+            string query = @"SELECT a.Id, a.PatientId,a.ScheduleId, convert(varchar, a.Date) as date,a.StartTime,a.EndTime,a.Status,p.DoctorName,s.SpecialityName
                             FROM [dbo].[Appointment] a inner join [dbo].[DrRegistration] p on a.DoctorId=p.Id
                             inner join [dbo].[Speciality]  s on s.Id=p.SpecialityId
                             where Status='Reject'";
@@ -581,7 +585,7 @@ inner join [dbo].[Speciality]  s on s.Id=p.SpecialityId
                 appointment.ScheduleId = (int)reader["ScheduleId"];
                 appointment.DoctorName = reader["DoctorName"].ToString();
                 appointment.Speciality = reader["SpecialityName"].ToString();
-                appointment.AppointmentDate = reader["Date"].ToString();
+                appointment.AppointmentDate =reader["date"].ToString();
                 appointment.StartTime = reader["StartTime"].ToString();
                 appointment.EndTime = reader["EndTime"].ToString();
                 appointment.Status = reader["Status"].ToString();
@@ -595,10 +599,10 @@ inner join [dbo].[Speciality]  s on s.Id=p.SpecialityId
 
         public List<CheckStatusViewModel> GetEmail(int appointmentId)
         {
-            string query = @"select a.Date,a.StartTime,a.EndTime,p.PatientName,p.Email
+            string query = @"select convert(varchar, a.Date, 101) as date,a.StartTime,a.EndTime,p.PatientName,p.Email
                             from Appointment a
                             inner join [dbo].[PtRegistration] p on p.Id=a.PatientId
-                            where a.Id='"+appointmentId+"'";
+                            where a.Id='" +appointmentId+"'";
             SqlCommand cmd = new SqlCommand(query, con);
             con.Open();
             SqlDataReader reader = cmd.ExecuteReader();
@@ -607,7 +611,7 @@ inner join [dbo].[Speciality]  s on s.Id=p.SpecialityId
             {
                 CheckStatusViewModel appointment = new CheckStatusViewModel();
                 appointment.PatientName = reader["PatientName"].ToString();
-                appointment.AppointmentDate = reader["Date"].ToString();
+                appointment.AppointmentDate = reader["date"].ToString();
                 appointment.StartTime = reader["StartTime"].ToString();
                 appointment.EndTime = reader["EndTime"].ToString();
                 appointment.PatientEmail = reader["Email"].ToString();
@@ -620,7 +624,7 @@ inner join [dbo].[Speciality]  s on s.Id=p.SpecialityId
         }
         public List<CheckStatusViewModel> GetsubmitedEmail(int appointmentId)
         {
-            string query = @"select a.Date,a.StartTime,a.EndTime,p.PatientName,p.Email
+            string query = @"select convert(varchar, a.Date,101) as date,a.StartTime,a.EndTime,p.PatientName,p.Email
                             from [dbo].[PtRegistration] p
                             inner join [dbo].[Appointment] a on p.Id=a.PatientId
                             where p.Id='" + appointmentId + "'";
@@ -632,7 +636,7 @@ inner join [dbo].[Speciality]  s on s.Id=p.SpecialityId
             {
                 CheckStatusViewModel appointment = new CheckStatusViewModel();
                 appointment.PatientName = reader["PatientName"].ToString();
-                appointment.AppointmentDate = reader["Date"].ToString();
+                appointment.AppointmentDate = reader["date"].ToString();
                 appointment.StartTime = reader["StartTime"].ToString();
                 appointment.EndTime = reader["EndTime"].ToString();
                 appointment.PatientEmail = reader["Email"].ToString();
@@ -643,6 +647,8 @@ inner join [dbo].[Speciality]  s on s.Id=p.SpecialityId
             con.Close();
             return alList;
         }
+
+       
 
     }
 }

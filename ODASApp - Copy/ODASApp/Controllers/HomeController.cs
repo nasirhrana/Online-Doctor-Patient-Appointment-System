@@ -34,23 +34,32 @@ namespace ODASApp.Controllers
         public ActionResult Create(DrRegistration aRegistration)
         {
             ViewBag.Specialyty = aManager.GetAllSpeciality();
-            string fileName = Path.GetFileNameWithoutExtension(aRegistration.ImageFile.FileName);
-            string extension = Path.GetExtension(aRegistration.ImageFile.FileName);
-            fileName = aRegistration.NID+ extension;
-            aRegistration.Image = "~/Image/" + fileName;
-            
-            fileName = Path.Combine(Server.MapPath("~/Image/"), fileName);
-            aRegistration.ImageFile.SaveAs(fileName);
-            
-                    int message = aManager.Save(aRegistration);
-                    if (message > 0)
-                    {
-                        ViewBag.showMsg = "Insert Successfully";
-                    }
-                    else
-                    {
-                        ViewBag.showMsg = "failed to Insert! please try again";
+            if (aLoginManager.IsDoctorEmailExists(aRegistration.Email))
+            {
+                ViewBag.showMsg = "Email already exist";
             }
+            else
+            {
+                
+                string fileName = Path.GetFileNameWithoutExtension(aRegistration.ImageFile.FileName);
+                string extension = Path.GetExtension(aRegistration.ImageFile.FileName);
+                fileName = aRegistration.NID + extension;
+                aRegistration.Image = "~/Image/" + fileName;
+
+                fileName = Path.Combine(Server.MapPath("~/Image/"), fileName);
+                aRegistration.ImageFile.SaveAs(fileName);
+
+                int message = aManager.Save(aRegistration);
+                if (message > 0)
+                {
+                    ViewBag.showMsg = "Insert Successfully";
+                }
+                else
+                {
+                    ViewBag.showMsg = "failed to Insert! please try again";
+                }
+            }
+            
 
 
 
@@ -81,18 +90,18 @@ namespace ODASApp.Controllers
 
             return View();
         }
-        public JsonResult IsDoctorEmailExists(string email)
-        {
-            bool isExist = aLoginManager.IsDoctorEmailExists(email);
+        //public JsonResult IsDoctorEmailExists(string email)
+        //{
+        //    bool isExist = aLoginManager.IsDoctorEmailExists(email);
 
-            if (isExist)
-                return Json(false, JsonRequestBehavior.AllowGet);
-            else
-            {
-                return Json(true, JsonRequestBehavior.AllowGet);
+        //    if (isExist)
+        //        return Json(false, JsonRequestBehavior.AllowGet);
+        //    else
+        //    {
+        //        return Json(true, JsonRequestBehavior.AllowGet);
 
-            }
-        }
+        //    }
+        //}
         public JsonResult IsPatientEmailExists(string email)
         {
             bool isExist = aLoginManager.IsPatientEmailExists(email);

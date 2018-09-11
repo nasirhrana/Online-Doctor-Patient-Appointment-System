@@ -15,5 +15,7 @@ namespace ODASApp.ViewModel
         public string Date { get; set; }
         public string  StartTime { get; set; }
         public string EndTime { get; set; }
+        public int MaxAppointment { get; set; }
+        public string AppointmentNumber { get; set; }
     }
 }

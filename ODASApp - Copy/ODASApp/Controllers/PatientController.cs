@@ -100,8 +100,17 @@ namespace ODASApp.Controllers
         {
 
             List<DoctorViewModel> aList = aManager.GetDoctorById(doctorId);
+            
             return Json(aList, JsonRequestBehavior.AllowGet);
         }
+        //public JsonResult GetByScheduleId(int schedulId)
+        //{
+
+        //    List<DoctorViewModel> aList = aManager.GetByScheduleId(schedulId);
+
+        //    return Json(aList, JsonRequestBehavior.AllowGet);
+        //}
+
         public ActionResult Appointment(int id)
         {
             if (Session["Id"] == null)
@@ -109,13 +118,15 @@ namespace ODASApp.Controllers
                 return RedirectToAction("Home", "Home");
                 ;
             }
+
+            string msg = null;
             Appointment aModel = aManager.GetDoctorAppointment(id);
             aModel.PateintId = (int)Session["Id"];
             int appointmentId = aModel.PateintId;
             aModel.Status = "Submit";
             if (aManager.IsScheduleExist(aModel))
             {
-                ViewBag.msg="you already booked this schedule";
+                 msg="you already booked this schedule";
             }
             else
             {
@@ -127,15 +138,17 @@ namespace ODASApp.Controllers
                         "<p>Hello '" + userEmail[0].PatientName + "' <br/>Your Leave Application  date '" +
                         userEmail[0].AppointmentDate + "' and start time '" + userEmail[0].StartTime + "', end time " +
                         userEmail[0].EndTime + " are submitted successfully<br/>Thank You<br/></p>");
-                    ViewBag.msg = "Submit successfully";
+                    msg = "Submit successfully";
+                    
                 }
                 else
                 {
                     ViewBag.msg = "failed to submit";
                 }
             }
-            
+            Session["msg"] = msg;
             return RedirectToAction("AppointmentStatus");
+
         }
 
         public ActionResult AppointmentStatus()

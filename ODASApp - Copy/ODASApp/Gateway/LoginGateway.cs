@@ -96,7 +96,7 @@ where Email = '" + aLogin.Email + "' and Password = '" + aLogin.Password + "'";
 
             bool isExists = false;
 
-            string query = "SELECT Email FROM [dbo].[DrRegistration] WHERE Email= @Email ";
+            string query =@"SELECT Email FROM [dbo].[DrRegistration] WHERE Email= @Email ";
             SqlCommand cmd = new SqlCommand(query, con);
             con.Open();
             cmd.Parameters.Clear();

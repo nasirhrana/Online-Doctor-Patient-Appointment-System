@@ -184,6 +184,7 @@
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModel\CheckStatusViewModel.cs" />
     <Compile Include="ViewModel\DoctorViewModel.cs" />
+    <Compile Include="ViewModel\ScheduleViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />

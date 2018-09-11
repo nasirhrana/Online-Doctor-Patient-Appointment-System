@@ -103,6 +103,7 @@ namespace ODASApp.Controllers
         [HttpPost]
         public ActionResult CreateSchedule(DrSchedule aSchedule)
         {
+            string status = null;
             aSchedule.DoctorId = (int)Session["Id"];
             try
             {
@@ -112,7 +113,7 @@ namespace ODASApp.Controllers
                     {
                         if (aManager.IsTimeExist(aSchedule))
                         {
-                            ViewBag.message = "schedule is conflicting";
+                            status = "schedule is conflicting";
                         }
 
                         else
@@ -120,11 +121,11 @@ namespace ODASApp.Controllers
                             int message = aManager.ScheduleSave(aSchedule);
                             if (message > 0)
                             {
-                                ViewBag.message = "Schedule created successfully";
+                                status = "Schedule created successfully";
                             }
                             else
                             {
-                                ViewBag.message = "failed to create Schedule";
+                                status = "failed to create Schedule";
                             }
                         }
 
@@ -134,11 +135,11 @@ namespace ODASApp.Controllers
                         int message = aManager.ScheduleSave(aSchedule);
                         if (message > 0)
                         {
-                            ViewBag.message = "Schedule created successfully";
+                            status = "Schedule created successfully";
                         }
                         else
                         {
-                            ViewBag.message = "failed to create Schedule";
+                            status = "failed to create Schedule";
                         }
                     }
                 }
@@ -146,12 +147,12 @@ namespace ODASApp.Controllers
             catch (Exception exception)
             {
 
-                ViewBag.message = exception.Message;
+                status = exception.Message;
             }
-            
-            
-            
-            return View();
+
+
+
+            return Json(status, JsonRequestBehavior.AllowGet);
         }
 
 

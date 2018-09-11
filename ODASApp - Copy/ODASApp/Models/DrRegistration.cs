@@ -21,7 +21,7 @@ namespace ODASApp.Models
         public string Name { get; set; }
         [Required]
         [EmailAddress]
-        [Remote("IsDoctorEmailExists", "Home", ErrorMessage = "Email already exists!")]
+        //[Remote("IsDoctorEmailExists", "Home", ErrorMessage = "Email already exists!")]
         public string Email { get; set; }
         [Required]
         public string PhoneNo { get; set; }

@@ -6,6 +6,7 @@
 }
 
 <h2>CreateSchedule</h2>
+<h3 style="text-align: center"><label id="displayMsg"></label> </h3>
 
 
 @using (Html.BeginForm(null, null, FormMethod.Post, new { name = "scheduleForm", id = "scheduleForm" })) 
@@ -37,7 +38,7 @@
             @Html.LabelFor(model => model.StartTime, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 <input type="text" id="StartTime" name="StartTime" />
-                @Html.ValidationMessageFor(model => model.StartTime)
+                @Html.ValidationMessageFor(model => model.StartTime, "", new { @class = "text-danger" })
             </div>
         </div>
 
@@ -51,74 +52,97 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="button" id="submit" value="Create" class="btn btn-default" />
             </div>
         </div>
+
     </div>
 }
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
+<h3 style="text-align: center"><label id="displayMsg"></label> </h3>
 
 @section Scripts {
-    @*@Scripts.Render("~/bundles/jqueryval")*@
-<script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
-<script src="~/Scripts/jquery.validate.js"></script>
-<script src="~/Scripts/jquery.timepicker.min.js"></script>
-<script src="~/Scripts/jquery-ui-timepicker-addon.min.js"></script>
-<script  type="text/javascript">
-    $(document).ready(function () {
-        $("#AppointmentDate").datepicker({
-            showAnim: "clip",
-            changeMonth: true,
-            changeYear: true,
-            dateFormat: "d M,yy",
-            minDate: "getDate"
+    <script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.timepicker.min.js"></script>
+    <script src="~/Scripts/jquery-ui-timepicker-addon.min.js"></script>
+    <script  type="text/javascript">
+        $(document).ready(function() {
+            $("#AppointmentDate").datepicker({
+                showAnim: "clip",
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: "d M,yy",
+                minDate: "getDate"
 
-        });
+            });
 
 
+            $('#StartTime').timepicker({
+                
         
-            //$(".Start_Time").datetimepicker({
-            //    changeMonth: true,
-            //    changeYear: true,
-            //    yearRange: "-100:+0",
-            //    dateFormat: 'dd-M-yy',
-            //    controlType: 'select',
-            //    timeFormat: 'hh:mm TT'
-            //});
+            });
 
-        $('#StartTime').timepicker({
-            //showAnim: "clip",
-            //changeMonth: true,
-            //changeYear: true,
-            //dateFormat: "d M,yy",
-            //minDate: "getDate"
+            $("#EndTime").timepicker({
+              
+            });
+            $("#submit").click(function () {
+                var time = $("#StartTime").val();
+                var startTime1 = $("#StartTime").val();
+                var endTime1 = $("#EndTime").val();
+                var Date = $("#AppointmentDate").val();
+
+                var hour = parseInt(time.substr(0, 2));
+                var minute = parseInt(time.substr(3, 5));
+                var startTime = hour * 60 + minute;
+
+                hour = parseInt(endTime1.substr(0, 2));
+                minute = parseInt(endTime1.substr(3, 5));
+                var endTime = hour * 60 + minute;
+
+                if (startTime == endTime) {
+                    $("#displayMsg").text("Its not Possible to create Zero Minute Duration class");
+                }
+
+                if (startTime <  endTime) {
+
+                    var jsonData = { StartTime: startTime1, EndTime: endTime1, AppointmentDate: Date };
+
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("CreateSchedule", "Doctor")',
+                        contentType: "application/json; charset=utf-8",
+                        data: JSON.stringify(jsonData),
+                        dataType: "json",
+                        success: function (data) {
+                            $("#displayMsg").text(data);
+
+                        }
+                    });
+
+                }
+                if (startTime > endTime) {
+                    $("#displayMsg").text("Start time must be less than end time");
+                    
+                }
+
+
+
+            });
+
+            $("#scheduleForm").validate({
+                rules: {
+                    AppointmentDate: "required",
+                    StartTime: "required",
+                    EndTime: "required",
+                },
+                messages: {
+                    AppointmentDate: "Please select your Date",
+                    StartTime: "Please enter your StartTime",
+                    EndTime: "Please enter your EndTime",
+                }
+
+            });
         });
-
-        $("#EndTime").timepicker({
-            //showAnim: "clip",
-            //changeMonth: true,
-            //changeYear: true,
-            //dateFormat: "d M,yy",
-            //minDate: "getDate"
-        });
-
-        $("#scheduleForm").validate({
-            rules: {
-                AppointmentDate: "required",
-                StartTime: "required",
-                EndTime: "required",
-            },
-            messages: {
-                AppointmentDate: "Please select your Date",
-                StartTime: "Please enter your StartTime",
-                EndTime: "Please enter your EndTime",
-            }
-
-        });
-    });
-</script>
+    </script>
 
 }

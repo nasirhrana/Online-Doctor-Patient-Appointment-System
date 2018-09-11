@@ -95,8 +95,14 @@ namespace ODASApp.Manager
         }
         public List<DoctorViewModel> GetDoctorById(int doctorId)
         {
+            
             return aGateway.GetDoctorById(doctorId);
         }
+        //public List<DoctorViewModel> GetByScheduleId(int schedulId)
+        //{
+
+        //    return aGateway.GetByScheduleId(schedulId);
+        //}
 
         public Appointment GetDoctorAppointment(int? id)
         {

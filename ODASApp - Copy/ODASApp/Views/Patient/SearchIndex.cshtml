@@ -45,14 +45,16 @@
                 <th>AppointmentDate</th>
                 <th>Start Time</th>
                 <th>End Time</th>
+                <th>Submitted</th>
                 <th>Select</th>
+
             </tr>
         </thead>
      
 
     </table>
 </form>
-<p>@ViewBag.msg</p>
+<p>@Session["msg"]</p>
 
 
     @section Scripts{
@@ -63,9 +65,9 @@
         <link href="~/Content/jquery.dataTables.multiselect.css" rel="stylesheet" />
         <script>
 
-            $(document).ready(function () {
+            $(document).ready(function() {
                 var id = [];
-                var name=[];
+                var name = [];
                 $("#DoctorTable").hide();
                 $("#ScheduleTable").hide();
                 $("#SpecialityId").change(function() {
@@ -79,9 +81,9 @@
                         //url: '/Department/GetStudentsByDepartmentId',
                         contentType: "application/json; charset=utf-8",
                         data: JSON.stringify(json),
-                        success: function (data) {
+                        success: function(data) {
                             for (var i = 0; i < data.length; i++) {
-                                if (id.indexOf(data[i].Id)===-1) {
+                                if (id.indexOf(data[i].Id) === -1) {
                                     id.push(data[i].Id);
                                     name.push(data[i].DoctorName);
                                 }
@@ -102,6 +104,7 @@
 
                 $("#DoctorId").change(function() {
                     var drId = $("#DoctorId").val();
+                    var schId = null;
                     var json = { doctorId: drId };
                     $.ajax({
                         type: "POST",
@@ -110,11 +113,9 @@
                         contentType: "application/json; charset=utf-8",
                         data: JSON.stringify(json),
                         success: function(data) {
-                            $("#tableId").dataTable({
-                                destroy: true,
+                            $('#tableId').dataTable({
                                 data: data,
-                                columns:
-                                [
+                                columns: [
                                     { 'data': 'Id' },
                                     { 'data': 'DoctorName' },
                                     { 'data': 'Degree' },
@@ -122,11 +123,15 @@
                                     { 'data': 'Date' },
                                     { 'data': 'StartTime' },
                                     { 'data': 'EndTime' },
-                                    { "targets": [8], "data": "ScheduleId", "render": function(data, type, full) { return '@Html.ActionLink("Select", "Appointment", new {id = "replace"})'.replace("replace", data); } }
-                                ],
+                                     { 'data': 'AppointmentNumber' },
+                                { "targets": [8], "data": "Id", "render": function (data, type, full) { return '@Html.ActionLink("Select", "Appointment", new { id = "replace" })'.replace("replace", data); } }
+
+                                ]
                             });
+
                         }
                     });
+
                 });
             });
 
